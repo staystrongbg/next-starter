@@ -1,0 +1,11 @@
+{
+  // Enable automatic formatting on save for better code consistency
+  "editor.formatOnSave": true,
+  // Configure code actions to run automatically on save
+  "editor.codeActionsOnSave": {
+    // Run all available fixes (e.g., ESLint, TypeScript) - consider "explicit" if performance issues occur
+    "source.fixAll": "always",
+    // Automatically organize import statements for cleaner code
+    "source.organizeImports": "always"
+  }
+}
