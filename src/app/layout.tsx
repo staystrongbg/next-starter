@@ -1,5 +1,6 @@
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
+import { Toaster } from '@/components/ui/sonner';
 import { Providers } from '@/providers';
 import { Metadata } from 'next';
 
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <Providers>
         <body className="flex min-h-screen w-screen flex-col bg-gray-100">
+          <Toaster position="bottom-right" />
           <Header />
           <main className="grow p-4">{children}</main>
           <Footer />
