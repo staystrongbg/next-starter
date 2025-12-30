@@ -1,6 +1,5 @@
-import { Button } from '@/components/ui/button';
+import { GuestSession } from '@/components/auth/guest-session';
 import { SmileIcon } from 'lucide-react';
-import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -25,20 +24,11 @@ export default function Home() {
         <br />
         Latest <strong>React Compiler</strong> feature is enabled for optimal performance.
       </p>
-      <div className="flex items-center justify-center gap-2">
-        <Button className="bg-blue-500 hover:bg-blue-600">
-          <Link href="/sign-in">Sign In</Link>
-        </Button>
-        <Button className="bg-blue-500 hover:bg-blue-600">
-          <Link href="/sign-up">Sign Up</Link>
-        </Button>
-      </div>
+      <GuestSession />
     </div>
   );
 }
 
-//TODO Middleware - Add authentication check and redirect logic and guard
-//TODO Other Auth Features like password reset, email verification, etc.
+//TODO Middleware - Add authentication check and redirect and guard logic
+//TODO Other Auth Features: email verification, password reset, change email, upload image
 //TODO Add Nodemailer
-//TODO Handle session
-//
