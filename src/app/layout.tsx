@@ -3,6 +3,7 @@ import { Header } from '@/components/header';
 import { Toaster } from '@/components/ui/sonner';
 import { Providers } from '@/providers';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 import './globals.css';
 
@@ -19,11 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-        <body className="flex min-h-screen w-screen flex-col bg-gray-100">
+        <body className="flex min-h-screen w-screen flex-col bg-gray-50">
           <Toaster position="bottom-right" />
           <Header />
           <main className="grow p-4">{children}</main>
-          <Footer />
+          <Suspense>
+            <Footer />
+          </Suspense>
         </body>
       </Providers>
     </html>

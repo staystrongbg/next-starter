@@ -11,7 +11,7 @@ import z from 'zod';
 import { SubmitButton } from '../submit-button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
-import { ShowPassword } from './show-password';
+import { TogglePasswordVisibility } from './toggle-password-visibility';
 
 const signupSchema = z
   .object({
@@ -122,7 +122,10 @@ export const SignUpForm = () => {
                   placeholder="Enter your password"
                   autoComplete="off"
                 />
-                <ShowPassword isVisible={isVisible} onClick={() => setIsVisible(!isVisible)} />
+                <TogglePasswordVisibility
+                  isVisible={isVisible}
+                  onClick={() => setIsVisible(!isVisible)}
+                />
               </div>
               {fieldState.invalid && (
                 <FieldError className="text-red-500" errors={[fieldState.error]} />
@@ -146,7 +149,7 @@ export const SignUpForm = () => {
                   placeholder="Confirm your password"
                   autoComplete="off"
                 />
-                <ShowPassword
+                <TogglePasswordVisibility
                   isVisible={isConfirmVisible}
                   onClick={() => setIsConfirmVisible(!isConfirmVisible)}
                 />

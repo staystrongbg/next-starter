@@ -1,10 +1,13 @@
 import { Eye, EyeOff } from 'lucide-react';
 
-interface ShowPasswordProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface TogglePasswordVisibilityProps extends React.HTMLAttributes<HTMLButtonElement> {
   isVisible: boolean;
 }
 
-export const ShowPassword = ({ isVisible, ...props }: ShowPasswordProps) => {
+export const TogglePasswordVisibility = ({
+  isVisible,
+  ...props
+}: TogglePasswordVisibilityProps) => {
   return (
     <button type="button" className="absolute top-1/2 right-3 -translate-y-1/2" {...props}>
       {isVisible ? (
