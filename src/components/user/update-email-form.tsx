@@ -7,9 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { SubmitButton } from '../submit-button';
+import { SubmitButton } from '../shared/submit-button';
 
 const updateEmailSchema = z.object({
   newEmail: z.email('Invalid email').trim().toLowerCase(),
@@ -37,7 +38,6 @@ export default function UpdateEmailForm({ authClient }: AuthClientType) {
     mutate: changeEmailMutation,
     isPending: isLoading,
     error,
-    isSuccess,
     isError,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof updateEmailSchema>) => {
@@ -49,6 +49,7 @@ export default function UpdateEmailForm({ authClient }: AuthClientType) {
       }
     },
     onSuccess: () => {
+      toast.success('Email updated successfully');
       session.refetch();
     },
   });
@@ -86,7 +87,6 @@ export default function UpdateEmailForm({ authClient }: AuthClientType) {
           disabled={isError || isLoading || !form.formState.isValid}
         />
       </FieldGroup>
-      {isSuccess && <p className="text-green-500">Email updated successfully.</p>}
     </form>
   );
 }

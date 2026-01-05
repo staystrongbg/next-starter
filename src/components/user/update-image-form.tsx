@@ -6,47 +6,49 @@ import { generateUserAvatar } from '@/helpers/generate-user-avatar';
 import { AuthClientType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { SubmitButton } from '../submit-button';
+import { SubmitButton } from '../shared/submit-button';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const updateImageSchema = z.object({
   image: z.instanceof(File).optional().nullable(),
-  name: z.string().trim().min(3, 'Name is required.'),
 });
 
 export default function UpdateImageForm({ authClient }: AuthClientType) {
   const session = authClient.useSession();
-
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm({
     resolver: zodResolver(updateImageSchema),
     mode: 'onChange',
     defaultValues: {
-      name: session?.data?.user?.name || '',
       image: null,
     },
   });
 
   //ensure form reflects session update
   useEffect(() => {
-    if (session.data?.user.name) {
-      form.reset({ name: session.data.user.name, image: null });
+    if (session.data?.user?.image) {
+      form.reset({ image: null });
+      setPreviewUrl(null);
     }
-  }, [session.data?.user.name, form]);
+  }, [session.data?.user?.image, form]);
 
   const {
     mutate: updateImageMutation,
     isPending: isLoading,
     error,
-    isSuccess,
     isError,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof updateImageSchema>) => {
       let imageUrl: string | undefined;
       const file = data.image ?? undefined;
+
       if (file) {
         const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
@@ -56,8 +58,8 @@ export default function UpdateImageForm({ authClient }: AuthClientType) {
         });
         imageUrl = base64;
       }
+
       const { error } = await authClient.updateUser({
-        name: data.name,
         image: imageUrl,
       });
       if (error) {
@@ -65,8 +67,13 @@ export default function UpdateImageForm({ authClient }: AuthClientType) {
       }
     },
     onSuccess: () => {
+      toast.success('Image updated successfully');
       session.refetch();
-      form.reset({ name: session.data?.user?.name ?? '', image: null });
+      form.reset({ image: null });
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+        setPreviewUrl(null);
+      }
     },
   });
 
@@ -75,7 +82,11 @@ export default function UpdateImageForm({ authClient }: AuthClientType) {
   };
 
   if (session.isPending) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-16 items-center justify-center">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
   }
 
   if (!session.data) {
@@ -88,64 +99,52 @@ export default function UpdateImageForm({ authClient }: AuthClientType) {
       {error && <FieldError errors={[error]} />}
       <FieldGroup>
         <Controller
-          name="name"
+          name="image"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>{field.name}</FieldLabel>
+              <span className="flex items-center gap-4">
+                <FieldLabel htmlFor={field.name}>
+                  Change Image
+                  <Avatar>
+                    <AvatarImage src={previewUrl || user.image || undefined} alt="user-avatar" />
+                    <AvatarFallback>{generateUserAvatar({ user })}</AvatarFallback>
+                  </Avatar>
+                </FieldLabel>
+              </span>
               <Input
-                {...field}
+                ref={inputRef}
                 id={field.name}
                 aria-invalid={fieldState.invalid}
                 placeholder={field.name}
-                type="text"
+                type="file"
+                accept="image/*"
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const url = URL.createObjectURL(file);
+                    if (previewUrl) {
+                      URL.revokeObjectURL(previewUrl);
+                    }
+                    setPreviewUrl(url);
+                  }
+                  field.onChange(file || null);
+                }}
+                hidden
               />
+
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
 
-        <Controller
-          name="image"
-          control={form.control}
-          render={({ field, fieldState }) => {
-            const { value, ...fieldProps } = field;
-            return (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>
-                  Change Image
-                  <Avatar>
-                    <AvatarImage
-                      src={session.data?.user?.image || 'https://github.com/shadcn.png'}
-                      alt="user-avatar"
-                    />
-                    <AvatarFallback>{generateUserAvatar({ user })}</AvatarFallback>
-                  </Avatar>
-                </FieldLabel>
-                <Input
-                  {...fieldProps}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  placeholder={field.name}
-                  type="file"
-                  accept="image/*"
-                  onChange={e => field.onChange(e.target.files?.[0] || null)}
-                  hidden
-                />
-
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-              </Field>
-            );
-          }}
-        />
         <SubmitButton
-          isLoading={isLoading}
           label="Update Image"
-          loadingLabel="Updating image..."
+          loadingLabel="Updating..."
+          isLoading={isLoading}
           disabled={isError || isLoading || !form.formState.isValid}
         />
       </FieldGroup>
-      {isSuccess && <p className="text-green-500">Image updated successfully.</p>}
     </form>
   );
 }

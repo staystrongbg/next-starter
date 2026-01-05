@@ -1,5 +1,5 @@
+import { UserDropdown } from '../user/user-dropdown';
 import { Navigation } from './navigation';
-import { UserDropdown } from './user-dropdown';
 
 export const Header = () => {
   return (

@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 
-import { SubmitButton } from '../submit-button';
+import { SubmitButton } from '../shared/submit-button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
 import { TogglePasswordVisibility } from './toggle-password-visibility';

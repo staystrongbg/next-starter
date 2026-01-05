@@ -4,25 +4,31 @@ import { authClient } from '@/lib/auth-client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 
-import { SubmitButton } from '../submit-button';
+import { SubmitButton } from '../shared/submit-button';
 import { Button } from '../ui/button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
+import { ForgotPasswordDialog } from './forgot-password-dialog';
 import { TogglePasswordVisibility } from './toggle-password-visibility';
 
 const signInSchema = z.object({
-  email: z.email(),
-  password: z.string().min(6),
+  email: z.email('Email is required').trim().toLowerCase(),
+  password: z.string().min(8, 'Password must be at least 8 characters long'),
 });
 
 export const SignInForm = () => {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
 
   const form = useForm({
     resolver: zodResolver(signInSchema),
@@ -47,7 +53,8 @@ export const SignInForm = () => {
       }
     },
     onSuccess: () => {
-      router.push('/');
+      form.reset();
+      router.push(redirect || '/');
     },
   });
 
@@ -100,6 +107,12 @@ export const SignInForm = () => {
                     onClick={() => setIsVisible(!isVisible)}
                   />
                 </div>
+                <p className="text-sm">
+                  Forgot Password?{' '}
+                  <Link href="#" onClick={() => setOpen(true)} className="text-blue-500">
+                    Click here
+                  </Link>
+                </p>
                 {fieldState.invalid && (
                   <FieldError className="text-red-500" errors={[fieldState.error]} />
                 )}
@@ -136,6 +149,7 @@ export const SignInForm = () => {
           GitHub
         </Button>
       </div>
+      <ForgotPasswordDialog open={open} onOpen={setOpen} />
     </>
   );
 };

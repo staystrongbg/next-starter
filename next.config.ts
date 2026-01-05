@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   compress: true,
   cacheComponents: true,
+  experimental: {
+    authInterrupts: true,
+  },
 };
 
 export default nextConfig;

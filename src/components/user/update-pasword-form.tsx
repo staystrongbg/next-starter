@@ -2,13 +2,18 @@
 
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { AuthClientType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { SubmitButton } from '../submit-button';
+import { PasswordStrengthMeter } from '../auth/password-strength-meter';
+import { TogglePasswordVisibility } from '../auth/toggle-password-visibility';
+import { SubmitButton } from '../shared/submit-button';
 
 const updatePasswordSchema = z
   .object({
@@ -27,19 +32,26 @@ const updatePasswordSchema = z
 export default function UpdatePasswordForm({ authClient }: AuthClientType) {
   const session = authClient.useSession();
 
+  const [isPwdVisible, setIsPwdVisible] = useState(false);
+  const [isNewPwdVisible, setIsNewPwdVisible] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(updatePasswordSchema),
+    mode: 'onChange',
     defaultValues: {
       currentPassword: '',
       newPassword: '',
     },
   });
 
+  const newPasswordValue = form.watch('newPassword');
+
+  const strength = useMemo(() => getPasswordStrength(newPasswordValue), [newPasswordValue]);
+
   const {
     mutate: changePasswordMutation,
     isPending: isLoading,
     error,
-    isSuccess,
     isError,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof updatePasswordSchema>) => {
@@ -57,6 +69,7 @@ export default function UpdatePasswordForm({ authClient }: AuthClientType) {
         currentPassword: '',
         newPassword: '',
       });
+      toast.success('Password updated successfully');
       session.refetch();
     },
   });
@@ -76,14 +89,20 @@ export default function UpdatePasswordForm({ authClient }: AuthClientType) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>Current Password</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="Current Password"
-                autoComplete="current-password"
-                type="password"
-              />
+              <div className="relative">
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  placeholder="Current Password"
+                  autoComplete="current-password"
+                  type={isPwdVisible ? 'text' : 'password'}
+                />
+                <TogglePasswordVisibility
+                  isVisible={isPwdVisible}
+                  onClick={() => setIsPwdVisible(!isPwdVisible)}
+                />
+              </div>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -94,15 +113,25 @@ export default function UpdatePasswordForm({ authClient }: AuthClientType) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>New Password</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="New Password"
-                autoComplete="new-password"
-                type="password"
-              />
+              <div className="relative">
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  placeholder="New Password"
+                  autoComplete="new-password"
+                  type={isNewPwdVisible ? 'text' : 'password'}
+                />
+
+                <TogglePasswordVisibility
+                  isVisible={isNewPwdVisible}
+                  onClick={() => setIsNewPwdVisible(!isNewPwdVisible)}
+                />
+              </div>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+
+              {/* Password strength meter */}
+              <PasswordStrengthMeter strength={strength} />
             </Field>
           )}
         />
@@ -110,11 +139,15 @@ export default function UpdatePasswordForm({ authClient }: AuthClientType) {
           isLoading={isLoading}
           label="Update Password"
           loadingLabel="Updating Password..."
-          disabled={isLoading || isError || !form.formState.isValid}
+          disabled={
+            isLoading ||
+            isError ||
+            !form.formState.isValid ||
+            !form.formState.isDirty ||
+            strength.score < 2
+          }
         />
       </FieldGroup>
-
-      {isSuccess && <p className="text-green-500">Password updated successfully.</p>}
     </form>
   );
 }
