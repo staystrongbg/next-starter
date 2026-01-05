@@ -5,10 +5,8 @@
 - configure VS Code to use prettier by setting up .vscode/settings.json
 - import sorting settings
 - tailwind prettier plugin settings
-
-# dependencies ready to use
-
-- better-auth
-- prisma
-- zod
-- tanstack query
+- session server/client handling
+- middleware for page protection
+- user profile for full account control
+- prisma sqlite database
+-  error handling for all mutations
