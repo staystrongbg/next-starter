@@ -30,8 +30,8 @@ export const SignUpForm = () => {
   });
 
   const {
-    mutate: signUp,
-    isPending,
+    mutate: signUpMutation,
+    isPending: isLoading,
     error,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof signupSchema>) => {
@@ -50,7 +50,7 @@ export const SignUpForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof signupSchema>) => {
-    signUp(data);
+    signUpMutation(data);
   };
   return (
     <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -153,7 +153,8 @@ export const SignUpForm = () => {
           variant={'outline'}
           label="Sign Up"
           loadingLabel="Signing up..."
-          isLoading={isPending}
+          isLoading={isLoading}
+          disabled={isLoading}
         />
       </FieldGroup>
     </form>

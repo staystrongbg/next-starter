@@ -57,9 +57,7 @@ export default function ResendVerificationLink() {
         {isVerified ? (
           <div className="text-center">
             <CheckCircle className="mx-auto h-10 w-10 text-green-500" />
-            <p className="text-center text-gray-600">
-              Verification email has been sent successfully.
-            </p>
+            <p className="text-center text-gray-600">Email verified successfully.</p>
           </div>
         ) : (
           <p className="text-center text-gray-600">

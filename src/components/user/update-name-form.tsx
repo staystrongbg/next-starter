@@ -31,7 +31,7 @@ export const UpdateNameForm = ({ authClient }: AuthClientType) => {
   }, [session.data?.user?.name, form]);
 
   const {
-    mutate: updateName,
+    mutate: updateNameMutation,
     isPending: isLoading,
     error,
     isError,
@@ -49,7 +49,7 @@ export const UpdateNameForm = ({ authClient }: AuthClientType) => {
   });
 
   const onSubmit = (data: z.infer<typeof updateNameSchema>) => {
-    updateName(data);
+    updateNameMutation(data);
   };
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -77,6 +77,7 @@ export const UpdateNameForm = ({ authClient }: AuthClientType) => {
           label="Update Name"
           loadingLabel="Updating..."
           isLoading={isLoading || isError}
+          disabled={isLoading}
         />
       </FieldGroup>
     </form>

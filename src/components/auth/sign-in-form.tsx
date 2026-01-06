@@ -35,8 +35,8 @@ export const SignInForm = () => {
   });
 
   const {
-    mutate: signIn,
-    isPending,
+    mutate: signInMutation,
+    isPending: isLoading,
     error,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof signInSchema>) => {
@@ -55,7 +55,7 @@ export const SignInForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof signInSchema>) => {
-    signIn(data);
+    signInMutation(data);
   };
   return (
     <>
@@ -119,12 +119,13 @@ export const SignInForm = () => {
             variant={'outline'}
             label="Sign In"
             loadingLabel="Signing in..."
-            isLoading={isPending}
+            isLoading={isLoading}
+            disabled={isLoading}
           />
         </FieldGroup>
       </form>
       <div className="mt-2 flex items-center justify-center p-2">
-        <p>Or sign in with</p>
+        <p className="text-sm">Sign in with</p>
         <Button
           className="cursor-pointer"
           type="button"
