@@ -2,6 +2,7 @@
 
 import { generateUserAvatar } from '@/helpers/generate-user-avatar';
 import { User } from 'better-auth';
+import { CheckIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -12,15 +13,18 @@ export const ReadOnlyUserDetails = ({ user }: { user: User }) => {
     <section>
       <div className="mt-4 flex flex-col items-center gap-2">
         <Avatar>
-          <AvatarImage src={user?.image || '/user-fallback-image.jpeg'} alt="user-avatar" />
+          <AvatarImage src={user?.image || undefined} alt="user-avatar" />
           <AvatarFallback>{generateUserAvatar({ user })}</AvatarFallback>
         </Avatar>
-        <p>Name: {user?.name}</p>
-        <p>
-          Email: {user?.email}{' '}
-          <span className="text-xs">
+        <p className="font-semibold">{user?.name}</p>
+        <div className="flex items-center gap-2">
+          <p className="font-semibold">{user?.email}</p>
+          <div className="text-xs">
             {user?.emailVerified ? (
-              <span className="text-green-500">Verified</span>
+              <div className="flex items-center text-green-500">
+                <CheckIcon />
+                <span>Verified</span>
+              </div>
             ) : (
               <Link href="/verify-email">
                 <Button variant="link" size={'sm'} type="button">
@@ -28,9 +32,11 @@ export const ReadOnlyUserDetails = ({ user }: { user: User }) => {
                 </Button>
               </Link>
             )}
-          </span>
+          </div>
+        </div>
+        <p>
+          Joined <span className="font-semibold">{user?.createdAt.toDateString()}</span>
         </p>
-        <p>Date joined: {user?.createdAt.toDateString()}</p>
       </div>
     </section>
   );

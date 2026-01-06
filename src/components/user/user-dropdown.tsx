@@ -42,10 +42,7 @@ export const UserDropdown = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer">
         <Avatar>
-          <AvatarImage
-            src={session.data.user.image || '/user-fallback-image.jpeg'}
-            alt="user-avatar"
-          />
+          <AvatarImage src={session.data.user.image || undefined} alt="user-avatar" />
           <AvatarFallback>{generateUserAvatar({ user })}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

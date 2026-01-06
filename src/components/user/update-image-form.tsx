@@ -102,7 +102,7 @@ export default function UpdateImageForm({ authClient }: AuthClientType) {
             <Field data-invalid={fieldState.invalid}>
               <span className="flex items-center gap-4">
                 <FieldLabel htmlFor={field.name}>
-                  Change Image
+                  Image
                   <Avatar>
                     <AvatarImage src={previewUrl || user.image || undefined} alt="user-avatar" />
                     <AvatarFallback>{generateUserAvatar({ user })}</AvatarFallback>
