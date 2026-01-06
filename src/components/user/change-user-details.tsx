@@ -1,6 +1,7 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
+import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '../ui/button';
@@ -16,7 +17,10 @@ export const ChangeUserDetails = () => {
   return (
     <div className="mt-8 max-w-xl">
       <Button variant="outline" className="w-full" onClick={() => setOnClose(!onClose)}>
-        Change
+        Change{' '}
+        <ChevronDownIcon
+          className={`ml-2 h-4 w-4 transition-transform ${onClose ? '-rotate-90' : ''}`}
+        />
       </Button>
       {!onClose && (
         <section className="mt-8 flex flex-col gap-8">
