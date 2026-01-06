@@ -11,15 +11,12 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { authClient } from '@/lib/auth-client';
+import { forgotPasswordSchema } from '@/lib/valildations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-const forgotPasswordSchema = z.object({
-  email: z.email().trim().min(1, 'Email is required'),
-});
 
 interface ForgotPasswordDialogProps {
   open: boolean;

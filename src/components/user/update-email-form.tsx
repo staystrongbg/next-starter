@@ -2,6 +2,7 @@
 
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { updateEmailSchema } from '@/lib/valildations';
 import { AuthClientType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -11,10 +12,6 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { SubmitButton } from '../shared/submit-button';
-
-const updateEmailSchema = z.object({
-  newEmail: z.email('Invalid email').trim().toLowerCase(),
-});
 
 export default function UpdateEmailForm({ authClient }: AuthClientType) {
   const session = authClient.useSession();

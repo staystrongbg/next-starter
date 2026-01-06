@@ -1,13 +1,13 @@
 'use client';
 
 import { generateUserAvatar } from '@/helpers/generate-user-avatar';
-import { IUser } from '@/types';
+import { User } from 'better-auth';
 import Link from 'next/link';
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 
-export const ReadOnlyUserDetails = ({ user }: IUser) => {
+export const ReadOnlyUserDetails = ({ user }: { user: User }) => {
   return (
     <section>
       <div className="mt-4 flex flex-col items-center gap-2">

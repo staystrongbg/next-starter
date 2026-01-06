@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 
 export default function ResetPasswordPage() {
   return (
-    <div className="mx-auto max-w-xl">
+    <>
       <h1 className="text-center text-2xl font-bold">Reset Password</h1>
       <Suspense
         fallback={
@@ -15,6 +15,6 @@ export default function ResetPasswordPage() {
       >
         <ResetPasswordForm />
       </Suspense>
-    </div>
+    </>
   );
 }

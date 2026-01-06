@@ -3,6 +3,7 @@
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
+import { updatePasswordSchema } from '@/lib/valildations';
 import { AuthClientType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -14,20 +15,6 @@ import { z } from 'zod';
 import { PasswordStrengthMeter } from '../auth/password-strength-meter';
 import { TogglePasswordVisibility } from '../auth/toggle-password-visibility';
 import { SubmitButton } from '../shared/submit-button';
-
-const updatePasswordSchema = z
-  .object({
-    currentPassword: z
-      .string()
-      .trim()
-      .nonempty('Current password is required')
-      .min(8, 'Must be at least 8 characters'),
-    newPassword: z.string().trim().min(8, 'New password must be at least 8 characters long'),
-  })
-  .refine(({ currentPassword, newPassword }) => currentPassword !== newPassword, {
-    message: 'New password must be different from current password',
-    path: ['newPassword'],
-  });
 
 export default function UpdatePasswordForm({ authClient }: AuthClientType) {
   const session = authClient.useSession();

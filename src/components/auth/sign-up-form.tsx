@@ -1,6 +1,7 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
+import { signupSchema } from '@/lib/valildations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -12,18 +13,6 @@ import { SubmitButton } from '../shared/submit-button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
 import { TogglePasswordVisibility } from './toggle-password-visibility';
-
-const signupSchema = z
-  .object({
-    name: z.string().min(3),
-    email: z.email(),
-    password: z.string().min(6),
-    confirmPassword: z.string().min(6),
-  })
-  .refine(data => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  });
 
 export const SignUpForm = () => {
   const router = useRouter();

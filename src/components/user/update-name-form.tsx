@@ -1,5 +1,6 @@
 'use client';
 
+import { updateNameSchema } from '@/lib/valildations';
 import { AuthClientType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -11,10 +12,6 @@ import { z } from 'zod';
 import { SubmitButton } from '../shared/submit-button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
-
-const updateNameSchema = z.object({
-  name: z.string().trim().min(3, 'Name is required.'),
-});
 
 export const UpdateNameForm = ({ authClient }: AuthClientType) => {
   const session = authClient.useSession();

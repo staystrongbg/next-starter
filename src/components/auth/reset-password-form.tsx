@@ -7,6 +7,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { authClient } from '@/lib/auth-client';
+import { resetPasswordSchema } from '@/lib/valildations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -14,10 +15,6 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-const resetPasswordSchema = z.object({
-  newPassword: z.string().trim().min(8, 'New password must be at least 8 characters long'),
-});
 
 export const ResetPasswordForm = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

@@ -1,6 +1,7 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
+import { signInSchema } from '@/lib/valildations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
@@ -16,11 +17,6 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
 import { ForgotPasswordDialog } from './forgot-password-dialog';
 import { TogglePasswordVisibility } from './toggle-password-visibility';
-
-const signInSchema = z.object({
-  email: z.email('Email is required').trim().toLowerCase(),
-  password: z.string().min(8, 'Password must be at least 8 characters long'),
-});
 
 export const SignInForm = () => {
   const router = useRouter();

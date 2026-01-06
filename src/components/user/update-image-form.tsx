@@ -3,6 +3,7 @@
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { generateUserAvatar } from '@/helpers/generate-user-avatar';
+import { updateImageSchema } from '@/lib/valildations';
 import { AuthClientType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -14,10 +15,6 @@ import { z } from 'zod';
 
 import { SubmitButton } from '../shared/submit-button';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-
-const updateImageSchema = z.object({
-  image: z.instanceof(File).optional().nullable(),
-});
 
 export default function UpdateImageForm({ authClient }: AuthClientType) {
   const session = authClient.useSession();

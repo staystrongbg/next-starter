@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function SignUp() {
   return (
-    <div className="mx-auto max-w-lg p-4">
+    <>
       <h1 className="mb-4 text-center text-2xl font-bold">Sign Up</h1>
       <SignUpForm />
       <p className="mt-4 text-sm text-gray-600">
@@ -12,6 +12,6 @@ export default function SignUp() {
           Sign in
         </Link>
       </p>
-    </div>
+    </>
   );
 }
