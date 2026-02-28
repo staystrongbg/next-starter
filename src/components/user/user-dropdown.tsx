@@ -40,14 +40,14 @@ export const UserDropdown = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="cursor-pointer">
+      <DropdownMenuTrigger className="cursor-pointer" asChild>
         <Avatar>
           <AvatarImage src={session.data.user.image || undefined} alt="user-avatar" />
           <AvatarFallback>{generateUserAvatar({ user })}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
+        <DropdownMenuItem asChild>
           <Link href="/profile">
             <Button variant="ghost">
               <div className="flex items-center">
