@@ -1,5 +1,6 @@
 import { GuestSession } from '@/components/auth/guest-session';
-import { Database, FileCode, Folder, InfoIcon, Layers, Rocket, Shield, Zap } from 'lucide-react';
+import { NotificationBoard } from '@/components/shared/notification-board';
+import { Database, FileCode, Folder, Layers, Rocket, Shield, Zap } from 'lucide-react';
 
 const features = [
   {
@@ -89,13 +90,13 @@ export default function Home() {
   return (
     <div className="mx-auto flex max-w-5xl flex-col items-center gap-16 px-4 py-12">
       <div className="flex flex-col items-center gap-6 text-center">
-        <div className="flex items-center justify-center rounded-lg border-2 border-green-500 bg-green-300 p-2">
-          <InfoIcon />
-          <span className="ml-2 text-sm text-gray-600">
-            Note that experimental Nextjs <b>AuthInterups</b> feature is enabled for handling
-            unauthorized and unauthenticated redirections.
-          </span>
-        </div>
+        <NotificationBoard type="warning">
+          Note that experimental Nextjs <b>AuthInterups</b> feature is enabled for handling
+          unauthorized redirections.
+        </NotificationBoard>
+        <NotificationBoard type="info" message="Start by filling out the .env.example file" />
+        <NotificationBoard message="To use Github or any other social authentication, set up the corresponding environment variables and enable the providers in the auth configuration" />
+        <NotificationBoard message="To setup your db modify schema.prisma file and run 'bun db:generate' and 'bun db:push'" />
         <div className="flex items-center gap-2 text-sm font-medium">
           <Rocket className="h-4 w-4 text-orange-600" />
           <span className="text-blue-600">Next.js Starter Kit</span>
@@ -104,7 +105,7 @@ export default function Home() {
           Build faster with a complete foundation
         </h1>
         <p className="max-w-xl text-lg text-gray-600">
-          Everything you need to start building production-ready, small-medium, applications.
+          Everything you need to start building production-ready, small-to-medium, applications.
           TypeScript, Tailwind CSS, authentication, and sqlite database — all pre-configured.
         </p>
         <GuestSession />
