@@ -56,7 +56,7 @@ const fileTree = [
   { name: 'shared/...', type: 'file', indent: 2 },
   { name: 'user/...', type: 'file', indent: 2 },
   { name: 'ui/...', type: 'file', indent: 2 },
-  { name: 'lib/...', type: 'folder', indent: 1 },
+  { name: 'lib/', type: 'folder', indent: 1 },
   { name: 'utils.ts', type: 'file', indent: 2 },
   { name: 'auth.ts', type: 'file', indent: 2 },
   { name: 'auth-client.ts', type: 'file', indent: 2 },

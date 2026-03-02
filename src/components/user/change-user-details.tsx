@@ -1,7 +1,7 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
-import { ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon, ImageIcon, Lock, Mail, UserCircle } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '../ui/button';
@@ -11,44 +11,50 @@ import UpdateImageForm from './update-image-form';
 import { UpdateNameForm } from './update-name-form';
 import UpdatePasswordForm from './update-pasword-form';
 
+const sections = [
+  { id: 'password', label: 'Password', icon: Lock, component: UpdatePasswordForm },
+  { id: 'email', label: 'Email Address', icon: Mail, component: UpdateEmailForm },
+  { id: 'name', label: 'Display Name', icon: UserCircle, component: UpdateNameForm },
+  { id: 'image', label: 'Profile Picture', icon: ImageIcon, component: UpdateImageForm },
+];
+
 export const ChangeUserDetails = () => {
-  const [onClose, setOnClose] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="mt-8 max-w-xl">
-      <Button variant="outline" className="w-full" onClick={() => setOnClose(!onClose)}>
-        Change{' '}
+    <div className="mt-8">
+      <Button
+        variant="outline"
+        className="w-full justify-between"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span>Account Settings</span>
         <ChevronDownIcon
-          className={`ml-2 h-4 w-4 transition-transform ${onClose ? '-rotate-90' : ''}`}
+          className={`h-4 w-4 transition-transform duration-200 ${isOpen ? '' : '-rotate-90'}`}
         />
       </Button>
-      {!onClose && (
-        <section className="mt-8 flex flex-col gap-8">
-          {/* pass reset */}
-          <div>
-            <h3 className="text-center text-lg font-semibold">Change Password</h3>
-            <UpdatePasswordForm authClient={authClient} />
-          </div>
-          <Separator />
-          {/* email update */}
-          <div>
-            <h3 className="text-center text-lg font-semibold">Change Email</h3>
-            <UpdateEmailForm authClient={authClient} />
-          </div>
-          <Separator />
-          {/* update name form */}
-          <div>
-            <h3 className="text-center text-lg font-semibold">Change Name</h3>
-            <UpdateNameForm authClient={authClient} />
-          </div>
-          <Separator />
-          {/* update image form*/}
-          <div>
-            <h3 className="text-center text-lg font-semibold">Change Image</h3>
-            <UpdateImageForm authClient={authClient} />
-          </div>
-          <Separator />
-        </section>
+
+      {isOpen && (
+        <div className="mt-6 space-y-6">
+          {sections.map((section, index) => {
+            const FormComponent = section.component;
+            const Icon = section.icon;
+            return (
+              <div key={section.id}>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100">
+                    <Icon className="h-4 w-4 text-gray-600" />
+                  </div>
+                  <h3 className="font-medium text-gray-900">{section.label}</h3>
+                </div>
+                <div className="mt-3 pl-11">
+                  <FormComponent authClient={authClient} />
+                </div>
+                {index < sections.length - 1 && <Separator className="mt-6" />}
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );
