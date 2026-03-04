@@ -92,11 +92,19 @@ export default function Home() {
       <div className="flex flex-col items-center gap-6 text-center">
         <NotificationBoard type="warning">
           Note that experimental Nextjs <b>AuthInterups</b> feature is enabled for handling
-          unauthorized redirections.
+          unauthorized redirections
         </NotificationBoard>
-        <NotificationBoard type="info" message="Start by filling out the .env.example file" />
-        <NotificationBoard message="To use Github or any other social authentication, set up the corresponding environment variables and enable the providers in the auth configuration" />
-        <NotificationBoard message="To setup your db modify schema.prisma file and run 'bun db:generate' and 'bun db:push'" />
+        <NotificationBoard type="info">
+          Start by filling out the <code>.env.example</code> file
+        </NotificationBoard>
+        <NotificationBoard>
+          To use Github or any social authentication, set up the corresponding environment variables
+          and enable the providers in the auth configuration
+        </NotificationBoard>
+        <NotificationBoard>
+          To setup your db modify <code>schema.prisma</code> file and run{' '}
+          <code>bun db:generate</code> and <code>bun db:push</code>
+        </NotificationBoard>
         <div className="flex items-center gap-2 text-sm font-medium">
           <Rocket className="h-4 w-4 text-orange-600" />
           <span className="text-blue-600">Next.js Starter Kit</span>
@@ -106,7 +114,7 @@ export default function Home() {
         </h1>
         <p className="max-w-xl text-lg text-gray-600">
           Everything you need to start building production-ready, small-to-medium, applications.
-          TypeScript, Tailwind CSS, authentication, and sqlite database — all pre-configured.
+          TypeScript, Tailwind CSS, authentication, and sqlite database — all pre-configured
         </p>
         <GuestSession />
       </div>
