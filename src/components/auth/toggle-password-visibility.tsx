@@ -9,7 +9,12 @@ export const TogglePasswordVisibility = ({
   ...props
 }: TogglePasswordVisibilityProps) => {
   return (
-    <button type="button" className="absolute top-1/2 right-3 -translate-y-1/2" {...props}>
+    <button
+      type="button"
+      className="absolute top-1/2 right-3 -translate-y-1/2"
+      {...props}
+      title={isVisible ? 'Hide password' : 'Show password'}
+    >
       {isVisible ? (
         <Eye className="size-4 text-gray-500" />
       ) : (

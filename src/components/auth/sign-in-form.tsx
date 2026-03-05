@@ -23,6 +23,8 @@ export const SignInForm = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const isSocialSignInEnabled = false; //remove when social sign in is implemented
+
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect');
 
@@ -87,7 +89,15 @@ export const SignInForm = () => {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <div className="flex items-baseline justify-between">
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <p className="text-xs">
+                    Forgot Password?{' '}
+                    <Link href="#" onClick={() => setOpen(true)} className="text-blue-500">
+                      Click here
+                    </Link>
+                  </p>
+                </div>
 
                 <div className="relative flex items-center">
                   <Input
@@ -103,12 +113,7 @@ export const SignInForm = () => {
                     onClick={() => setIsVisible(!isVisible)}
                   />
                 </div>
-                <p className="text-sm">
-                  Forgot Password?{' '}
-                  <Link href="#" onClick={() => setOpen(true)} className="text-blue-500">
-                    Click here
-                  </Link>
-                </p>
+
                 {fieldState.invalid && (
                   <FieldError className="text-red-500" errors={[fieldState.error]} />
                 )}
@@ -130,6 +135,7 @@ export const SignInForm = () => {
           className="cursor-pointer"
           type="button"
           variant={'ghost'}
+          disabled={!isSocialSignInEnabled}
           onClick={() => authClient.signIn.social({ provider: 'google' })}
         >
           <Image src="/google-178-svgrepo-com.svg" alt="Google" width={20} height={20} />
@@ -140,6 +146,7 @@ export const SignInForm = () => {
           className="cursor-pointer"
           type="button"
           variant={'ghost'}
+          disabled={!isSocialSignInEnabled}
           onClick={() => authClient.signIn.social({ provider: 'github' })}
         >
           <Image src="/github-142-svgrepo-com.svg" alt="GitHub" width={20} height={20} />

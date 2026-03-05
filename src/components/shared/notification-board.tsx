@@ -1,35 +1,55 @@
 import { AlertCircleIcon, InfoIcon, TriangleAlertIcon } from 'lucide-react';
+import React from 'react';
+
+type NotificationType = 'info' | 'warning' | 'error';
 
 interface NotificationBoardProps {
-  type?: 'info' | 'warning' | 'error';
+  type?: NotificationType;
   children?: React.ReactNode;
 }
 
-export const NotificationBoard = ({ type = 'info', children }: NotificationBoardProps) => {
-  const borderColor =
-    type === 'info'
-      ? 'border-green-500'
-      : type === 'warning'
-        ? 'border-yellow-500'
-        : 'border-red-500';
-  const backgroundColor =
-    type === 'info' ? 'bg-green-300' : type === 'warning' ? 'bg-yellow-300' : 'bg-red-300';
+const styles: Record<
+  NotificationType,
+  { border: string; bg: string; icon: typeof InfoIcon; iconColor: string; textColor: string }
+> = {
+  info: {
+    border: 'border-blue-500',
+    bg: 'bg-blue-100',
+    icon: InfoIcon,
+    iconColor: 'text-blue-700',
+    textColor: 'text-blue-900',
+  },
+  warning: {
+    border: 'border-yellow-500',
+    bg: 'bg-yellow-100',
+    icon: TriangleAlertIcon,
+    iconColor: 'text-yellow-800',
+    textColor: 'text-yellow-950',
+  },
+  error: {
+    border: 'border-red-500',
+    bg: 'bg-red-100',
+    icon: AlertCircleIcon,
+    iconColor: 'text-red-700',
+    textColor: 'text-red-950',
+  },
+};
 
-  const icon =
-    type === 'info' ? (
-      <InfoIcon />
-    ) : type === 'warning' ? (
-      <TriangleAlertIcon />
-    ) : (
-      <AlertCircleIcon />
-    );
+export const NotificationBoard = ({
+  type = 'info',
+  children,
+}: NotificationBoardProps): React.ReactElement => {
+  const style = styles[type];
+  const Icon = style.icon;
 
   return (
     <div
-      className={`flex items-center justify-center rounded-lg border-2 ${borderColor} ${backgroundColor} p-2`}
+      role={type === 'error' ? 'alert' : 'status'}
+      aria-live="polite"
+      className={`flex items-center rounded-lg border-2 ${style.border} ${style.bg} p-3`}
     >
-      {icon}
-      <span className="ml-2 text-sm text-gray-600">{children}</span>
+      <Icon className={`h-5 w-5 shrink-0 ${style.iconColor}`} aria-hidden="true" />
+      <span className={`ml-2 text-sm ${style.textColor}`}>{children}</span>
     </div>
   );
 };

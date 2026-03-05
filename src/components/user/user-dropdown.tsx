@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { Button } from '../ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,10 +27,10 @@ export const UserDropdown = () => {
   }
 
   if (!session.data?.user) {
-    return <div className="text-sm text-gray-700">Hello Guest</div>;
+    return null;
   }
 
-  const user = { name: session.data.user.name, email: session.data.user.email };
+  const { user } = session.data;
 
   const logOut = async () => {
     await authClient.signOut();
@@ -42,28 +41,20 @@ export const UserDropdown = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer" asChild>
         <Avatar>
-          <AvatarImage src={session.data.user.image || undefined} alt="user-avatar" />
-          <AvatarFallback>{generateUserAvatar({ user })}</AvatarFallback>
+          <AvatarImage src={user.image || undefined} alt={user.name || 'User avatar'} />
+          <AvatarFallback>{generateUserAvatar({ user: { name: user.name, email: user.email } })}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link href="/profile">
-            <Button variant="ghost">
-              <div className="flex items-center">
-                <UserIcon className="mr-2 h-4 w-4" />
-                Profile
-              </div>
-            </Button>
+          <Link href="/profile" className="flex cursor-pointer items-center">
+            <UserIcon className="mr-2 h-4 w-4" />
+            Profile
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Button variant="ghost" onClick={logOut}>
-            <div className="flex items-center">
-              <LogOutIcon className="mr-2 h-4 w-4" />
-              Sign Out
-            </div>
-          </Button>
+        <DropdownMenuItem onClick={logOut} className="flex cursor-pointer items-center">
+          <LogOutIcon className="mr-2 h-4 w-4" />
+          Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

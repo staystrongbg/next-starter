@@ -58,7 +58,6 @@ const fileTree = [
   { name: 'user/...', type: 'file', indent: 2 },
   { name: 'ui/...', type: 'file', indent: 2 },
   { name: 'lib/', type: 'folder', indent: 1 },
-  { name: 'utils.ts', type: 'file', indent: 2 },
   { name: 'auth.ts', type: 'file', indent: 2 },
   { name: 'auth-client.ts', type: 'file', indent: 2 },
   { name: 'constants.ts', type: 'file', indent: 2 },
@@ -94,7 +93,7 @@ export default function Home() {
           Note that experimental Nextjs <b>AuthInterups</b> feature is enabled for handling
           unauthorized redirections
         </NotificationBoard>
-        <NotificationBoard type="info">
+        <NotificationBoard>
           Start by filling out the <code>.env.example</code> file
         </NotificationBoard>
         <NotificationBoard>
@@ -119,51 +118,63 @@ export default function Home() {
         <GuestSession />
       </div>
 
-      <div className="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {features.map(feature => (
-          <div
-            key={feature.title}
-            className="group flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 transition-shadow hover:shadow-md"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-              <feature.icon className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">{feature.title}</h3>
-              <p className="mt-1 text-sm text-gray-600">{feature.description}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <Features />
+      <FolderStructure />
+    </div>
+  );
+}
 
-      <div className="w-full">
-        <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold text-gray-900">Project Structure</h2>
-          <p className="mt-2 text-gray-600">Organized by feature for easy navigation</p>
-        </div>
-        <div className="h-[50vh] w-full overflow-y-scroll rounded-xl border border-gray-200 bg-blue-950">
-          <div className="bg-gray-700 px-4 py-2 text-xs font-medium text-orange-500">
-            next-starter/
+function Features() {
+  return (
+    <div className="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {features.map(feature => (
+        <div
+          key={feature.title}
+          className="group flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 transition-shadow hover:shadow-md"
+        >
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+            <feature.icon className="h-5 w-5" />
           </div>
-          <div className="p-4">
-            <div className="font-mono text-sm">
-              {fileTree.map((item, index) => (
+          <div>
+            <h3 className="font-semibold text-gray-900">{feature.title}</h3>
+            <p className="mt-1 text-sm text-gray-600">{feature.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FolderStructure() {
+  return (
+    <div className="w-full" aria-label="Project structure">
+      <div className="mb-6 text-center">
+        <h2 className="text-2xl font-bold text-gray-900">Project Structure</h2>
+        <p className="mt-2 text-gray-600">Organized by feature for easy navigation</p>
+      </div>
+      <div className="h-[50vh] w-full overflow-y-scroll rounded-xl border border-gray-200 bg-blue-950">
+        <div className="bg-gray-700 px-4 py-2 text-xs font-medium text-orange-500">
+          next-starter/
+        </div>
+        <div className="p-4">
+          <div className="font-mono text-sm">
+            {fileTree.map((item, index) => {
+              const isFolder = item.type === 'folder';
+              return (
                 <div
                   key={index}
                   className="flex items-center gap-2 py-1 text-gray-200"
                   style={{ paddingLeft: `${item.indent * 1.5}rem` }}
                 >
-                  {item.type === 'folder' ? (
+                  {isFolder ? (
                     <Folder className="h-4 w-4 text-blue-500" />
                   ) : (
                     <FileCode className="h-4 w-4 text-gray-400" />
                   )}
-                  <span className={item.type === 'folder' ? 'text-blue-500' : 'text-gray-300'}>
-                    {item.name}
-                  </span>
+                  <span className={isFolder ? 'text-blue-500' : 'text-gray-300'}>{item.name}</span>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>
