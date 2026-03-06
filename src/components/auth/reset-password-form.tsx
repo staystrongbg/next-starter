@@ -19,7 +19,7 @@ import { z } from 'zod';
 export const ResetPasswordForm = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const searchParams = useSearchParams();
-  const token = searchParams.get('token')!;
+  const token = searchParams.get('token');
   const router = useRouter();
 
   const form = useForm({
@@ -36,9 +36,13 @@ export const ResetPasswordForm = () => {
     isError,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof resetPasswordSchema>) => {
+      if (!token) {
+        throw new Error('Reset token is missing. Please request a new password reset link.');
+      }
+
       const { error } = await authClient.resetPassword({
         newPassword: data.newPassword,
-        token: token!,
+        token,
       });
       if (error) {
         throw error;

@@ -13,21 +13,21 @@ const styles: Record<
   { border: string; bg: string; icon: typeof InfoIcon; iconColor: string; textColor: string }
 > = {
   info: {
-    border: 'border-blue-500',
+    border: 'border-blue-300',
     bg: 'bg-blue-100',
     icon: InfoIcon,
     iconColor: 'text-blue-700',
     textColor: 'text-blue-900',
   },
   warning: {
-    border: 'border-yellow-500',
+    border: 'border-yellow-300',
     bg: 'bg-yellow-100',
     icon: TriangleAlertIcon,
     iconColor: 'text-yellow-800',
     textColor: 'text-yellow-950',
   },
   error: {
-    border: 'border-red-500',
+    border: 'border-red-300',
     bg: 'bg-red-100',
     icon: AlertCircleIcon,
     iconColor: 'text-red-700',
