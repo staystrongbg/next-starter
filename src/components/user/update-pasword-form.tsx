@@ -22,7 +22,7 @@ export default function UpdatePasswordForm({ authClient }: AuthClientType) {
   const [isPwdVisible, setIsPwdVisible] = useState(false);
   const [isNewPwdVisible, setIsNewPwdVisible] = useState(false);
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof updatePasswordSchema>>({
     resolver: zodResolver(updatePasswordSchema),
     mode: 'onChange',
     defaultValues: {

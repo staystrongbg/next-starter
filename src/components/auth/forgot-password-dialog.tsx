@@ -24,7 +24,7 @@ interface ForgotPasswordDialogProps {
 }
 
 export const ForgotPasswordDialog = ({ open, onOpen }: ForgotPasswordDialogProps) => {
-  const form = useForm({
+  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
     resolver: zodResolver(forgotPasswordSchema),
     mode: 'onChange',
     defaultValues: {

@@ -20,7 +20,7 @@ export default function UpdateImageForm({ authClient }: AuthClientType) {
   const session = authClient.useSession();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const form = useForm({
+  const form = useForm<z.infer<typeof updateImageSchema>>({
     resolver: zodResolver(updateImageSchema),
     mode: 'onChange',
     defaultValues: {

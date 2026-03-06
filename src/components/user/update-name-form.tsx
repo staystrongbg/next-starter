@@ -15,7 +15,7 @@ import { Input } from '../ui/input';
 
 export const UpdateNameForm = ({ authClient }: AuthClientType) => {
   const session = authClient.useSession();
-  const form = useForm({
+  const form = useForm<z.infer<typeof updateNameSchema>>({
     resolver: zodResolver(updateNameSchema),
     mode: 'onChange',
     defaultValues: {

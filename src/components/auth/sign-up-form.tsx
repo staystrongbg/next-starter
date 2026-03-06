@@ -19,7 +19,7 @@ export const SignUpForm = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       name: '',

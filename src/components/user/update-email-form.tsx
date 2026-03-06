@@ -16,7 +16,7 @@ import { SubmitButton } from '../shared/submit-button';
 export default function UpdateEmailForm({ authClient }: AuthClientType) {
   const session = authClient.useSession();
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof updateEmailSchema>>({
     resolver: zodResolver(updateEmailSchema),
     mode: 'onChange',
     defaultValues: {

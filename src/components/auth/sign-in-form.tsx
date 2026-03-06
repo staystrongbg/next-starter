@@ -28,7 +28,7 @@ export const SignInForm = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect');
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: '',
