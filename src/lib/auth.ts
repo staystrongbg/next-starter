@@ -4,6 +4,7 @@ import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 
 import {
+  baseUrl,
   databaseUrl,
   emailFrom,
   githubClientId,
@@ -22,6 +23,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'sqlite', // or "mysql", "postgresql", ...etc
   }),
+  baseURL: baseUrl,
   emailAndPassword: {
     enabled: true,
     async sendResetPassword({ user, url }) {
@@ -63,4 +65,6 @@ export const auth = betterAuth({
       updateEmailWithoutVerification: true,
     },
   },
+  // TODO: Add production domain
+  trustedOrigins: ['http://localhost:3000', baseUrl],
 });
