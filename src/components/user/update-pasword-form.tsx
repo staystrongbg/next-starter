@@ -118,7 +118,7 @@ export default function UpdatePasswordForm({ authClient }: AuthClientType) {
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 
               {/* Password strength meter */}
-              <PasswordStrengthMeter strength={strength} />
+              {newPasswordValue && <PasswordStrengthMeter strength={strength} />}
             </Field>
           )}
         />

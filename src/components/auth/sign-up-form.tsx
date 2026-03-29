@@ -1,5 +1,6 @@
 'use client';
 
+import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { authClient } from '@/lib/auth-client';
 import { signupSchema } from '@/lib/valildations';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,6 +13,7 @@ import z from 'zod';
 import { SubmitButton } from '../shared/submit-button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
+import { PasswordStrengthMeter } from './password-strength-meter';
 import { TogglePasswordVisibility } from './toggle-password-visibility';
 
 export const SignUpForm = () => {
@@ -28,6 +30,9 @@ export const SignUpForm = () => {
       confirmPassword: '',
     },
   });
+
+  const newPasswordValue = form.watch('password');
+  const strength = getPasswordStrength(newPasswordValue);
 
   const {
     mutate: signUpMutation,
@@ -94,35 +99,36 @@ export const SignUpForm = () => {
             </Field>
           )}
         />
+        <div className="flex flex-col gap-2">
+          <Controller
+            name="password"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
 
-        <Controller
-          name="password"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-
-              <div className="relative flex items-center">
-                <Input
-                  {...field}
-                  id="password"
-                  type={isVisible ? 'text' : 'password'}
-                  aria-invalid={fieldState.invalid}
-                  placeholder="Enter your password"
-                  autoComplete="off"
-                />
-                <TogglePasswordVisibility
-                  isVisible={isVisible}
-                  onClick={() => setIsVisible(!isVisible)}
-                />
-              </div>
-              {fieldState.invalid && (
-                <FieldError className="text-red-500" errors={[fieldState.error]} />
-              )}
-            </Field>
-          )}
-        />
-
+                <div className="relative flex items-center">
+                  <Input
+                    {...field}
+                    id="password"
+                    type={isVisible ? 'text' : 'password'}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Enter your password"
+                    autoComplete="off"
+                  />
+                  <TogglePasswordVisibility
+                    isVisible={isVisible}
+                    onClick={() => setIsVisible(!isVisible)}
+                  />
+                </div>
+                {fieldState.invalid && (
+                  <FieldError className="text-red-500" errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          {newPasswordValue && <PasswordStrengthMeter strength={strength} />}
+        </div>
         <Controller
           name="confirmPassword"
           control={form.control}

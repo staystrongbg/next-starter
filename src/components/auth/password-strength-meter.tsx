@@ -1,4 +1,5 @@
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
+import { MAX_PASSWORD_STRENGTH } from '@/lib/constants';
 
 interface PasswordStrengthMeterProps {
   strength: ReturnType<typeof getPasswordStrength>;
@@ -8,7 +9,7 @@ export const PasswordStrengthMeter = ({ strength }: PasswordStrengthMeterProps) 
   return (
     <div className="mt-2" aria-live="polite" aria-atomic="true">
       <div className="flex gap-1" role="img" aria-label={`Password strength: ${strength.label}`}>
-        {[1, 2, 3, 4].map(i => (
+        {Array.from({ length: MAX_PASSWORD_STRENGTH }).map((_, i) => (
           <div
             key={i}
             className={`h-1.5 flex-1 rounded ${i <= strength.score ? strength.color : 'bg-gray-200'}`}
