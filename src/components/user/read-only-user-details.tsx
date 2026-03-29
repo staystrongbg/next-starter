@@ -28,7 +28,12 @@ export const ReadOnlyUserDetails = ({ user }: { user: User }) => {
             </span>
           ) : (
             <Link href="/verify-email">
-              <Button variant="link" size="sm" className="h-auto p-0 text-xs text-orange-600">
+              <Button
+                variant="link"
+                size="sm"
+                className="flex h-auto items-center gap-1 p-0 text-xs text-orange-600"
+              >
+                <Mail className="h-4 w-4" />
                 Verify email
               </Button>
             </Link>
