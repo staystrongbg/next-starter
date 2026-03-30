@@ -30,7 +30,6 @@ export default function UpdateEmailForm({ authClient }: AuthClientType) {
       form.reset({ newEmail: session.data.user.email });
     }
   }, [session.data?.user.email, form]);
-
   const {
     mutate: changeEmailMutation,
     isPending: isLoading,

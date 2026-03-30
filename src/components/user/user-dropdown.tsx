@@ -4,7 +4,6 @@ import { generateUserAvatar } from '@/helpers/generate-user-avatar';
 import { authClient } from '@/lib/auth-client';
 import { Loader2Icon, LogOutIcon, UserIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
@@ -16,7 +15,6 @@ import {
 
 export const UserDropdown = () => {
   const session = authClient.useSession();
-  const router = useRouter();
 
   if (session.isPending) {
     return (
@@ -34,7 +32,6 @@ export const UserDropdown = () => {
 
   const logOut = async () => {
     await authClient.signOut();
-    router.push('/sign-in');
   };
 
   return (
@@ -42,7 +39,9 @@ export const UserDropdown = () => {
       <DropdownMenuTrigger className="cursor-pointer" asChild>
         <Avatar>
           <AvatarImage src={user.image || undefined} alt={user.name || 'User avatar'} />
-          <AvatarFallback>{generateUserAvatar({ user: { name: user.name, email: user.email } })}</AvatarFallback>
+          <AvatarFallback>
+            {generateUserAvatar({ user: { name: user.name, email: user.email } })}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
