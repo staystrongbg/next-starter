@@ -26,7 +26,9 @@ export const ChangeUserDetails = () => {
       <Button
         variant="outline"
         className="w-full justify-between"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(prev => !prev)}
+        aria-expanded={isOpen}
+        aria-controls="account-settings"
       >
         <span>Account Settings</span>
         <ChevronDownIcon
@@ -35,7 +37,7 @@ export const ChangeUserDetails = () => {
       </Button>
 
       {isOpen && (
-        <div className="mt-6 space-y-6">
+        <div id="account-settings" className="mt-6 space-y-6">
           {sections.map((section, index) => {
             const FormComponent = section.component;
             const Icon = section.icon;
