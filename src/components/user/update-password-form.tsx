@@ -3,8 +3,8 @@
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
-import { updatePasswordSchema } from '@/lib/valildations';
-import { AuthClientType } from '@/types';
+import { authClient } from '@/lib/auth-client';
+import { updatePasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
@@ -16,7 +16,7 @@ import { PasswordStrengthMeter } from '../auth/password-strength-meter';
 import { TogglePasswordVisibility } from '../auth/toggle-password-visibility';
 import { SubmitButton } from '../shared/submit-button';
 
-export default function UpdatePasswordForm({ authClient }: AuthClientType) {
+export default function UpdatePasswordForm() {
   const session = authClient.useSession();
 
   const [isPwdVisible, setIsPwdVisible] = useState(false);

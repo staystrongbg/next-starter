@@ -1,7 +1,7 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
-import { signInSchema } from '@/lib/valildations';
+import { signInSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';

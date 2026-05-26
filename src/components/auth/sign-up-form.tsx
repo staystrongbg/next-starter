@@ -2,7 +2,7 @@
 
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { authClient } from '@/lib/auth-client';
-import { signupSchema } from '@/lib/valildations';
+import { signupSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';

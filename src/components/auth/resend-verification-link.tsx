@@ -18,8 +18,12 @@ export default function ResendVerificationLink() {
     error,
   } = useMutation({
     mutationFn: async () => {
+      const email = session.data?.user.email;
+      if (!email) {
+        throw new Error('No email found');
+      }
       const { error } = await authClient.sendVerificationEmail({
-        email: session.data?.user.email || '',
+        email,
         callbackURL: '/profile',
       });
       if (error) {
@@ -50,9 +54,12 @@ export default function ResendVerificationLink() {
 
   const isVerified = session.data.user.emailVerified;
 
+  const errorMessage =
+    error instanceof Error ? error.message : typeof error === 'string' ? error : undefined;
+
   return (
     <>
-      {error && <p className="text-red-500">{error.message}</p>}
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       <div className="flex flex-col items-center gap-4">
         {isVerified ? (
           <div className="text-center">
@@ -65,14 +72,15 @@ export default function ResendVerificationLink() {
           </p>
         )}
       </div>
-      <SubmitButton
-        label="Send Verification Link"
-        type="button"
-        loadingLabel="Sending..."
-        isLoading={isPending}
-        disabled={isPending || isVerified}
-        onClick={() => resendVerification()}
-      />
+      {!isVerified && (
+        <SubmitButton
+          label="Send Verification Link"
+          type="button"
+          loadingLabel="Sending..."
+          isLoading={isPending}
+          onClick={() => resendVerification()}
+        />
+      )}
     </>
   );
 }

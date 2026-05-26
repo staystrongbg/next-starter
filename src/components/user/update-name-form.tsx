@@ -1,7 +1,7 @@
 'use client';
 
-import { updateNameSchema } from '@/lib/valildations';
-import { AuthClientType } from '@/types';
+import { authClient } from '@/lib/auth-client';
+import { updateNameSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -13,7 +13,7 @@ import { SubmitButton } from '../shared/submit-button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
 
-export const UpdateNameForm = ({ authClient }: AuthClientType) => {
+export const UpdateNameForm = () => {
   const session = authClient.useSession();
   const form = useForm<z.infer<typeof updateNameSchema>>({
     resolver: zodResolver(updateNameSchema),

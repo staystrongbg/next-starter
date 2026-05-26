@@ -2,8 +2,8 @@
 
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { updateEmailSchema } from '@/lib/valildations';
-import { AuthClientType } from '@/types';
+import { authClient } from '@/lib/auth-client';
+import { updateEmailSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -13,7 +13,7 @@ import { z } from 'zod';
 
 import { SubmitButton } from '../shared/submit-button';
 
-export default function UpdateEmailForm({ authClient }: AuthClientType) {
+export default function UpdateEmailForm() {
   const session = authClient.useSession();
 
   const form = useForm<z.infer<typeof updateEmailSchema>>({

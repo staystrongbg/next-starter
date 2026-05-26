@@ -3,8 +3,8 @@
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { generateUserAvatar } from '@/helpers/generate-user-avatar';
-import { updateImageSchema } from '@/lib/valildations';
-import { AuthClientType } from '@/types';
+import { authClient } from '@/lib/auth-client';
+import { updateImageSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
@@ -16,7 +16,7 @@ import { z } from 'zod';
 import { SubmitButton } from '../shared/submit-button';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-export default function UpdateImageForm({ authClient }: AuthClientType) {
+export default function UpdateImageForm() {
   const session = authClient.useSession();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);

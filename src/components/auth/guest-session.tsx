@@ -1,6 +1,7 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
+import { Loader2Icon } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '../ui/button';
@@ -9,11 +10,15 @@ export const GuestSession = () => {
   const session = authClient.useSession();
 
   if (session.isPending) {
-    return <div className="flex items-center justify-center gap-2">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center gap-2">
+        <Loader2Icon className="animate-spin" />
+      </div>
+    );
   }
 
   if (!session.data) {
-    const buttonClassName = "bg-blue-500 hover:bg-blue-600";
+    const buttonClassName = 'bg-blue-500 hover:bg-blue-600';
 
     return (
       <div className="flex items-center justify-center gap-2">

@@ -1,6 +1,5 @@
 'use client';
 
-import { authClient } from '@/lib/auth-client';
 import { ChevronDownIcon, ImageIcon, Lock, Mail, UserCircle } from 'lucide-react';
 import { useState } from 'react';
 
@@ -9,7 +8,7 @@ import { Separator } from '../ui/separator';
 import UpdateEmailForm from './update-email-form';
 import UpdateImageForm from './update-image-form';
 import { UpdateNameForm } from './update-name-form';
-import UpdatePasswordForm from './update-pasword-form';
+import UpdatePasswordForm from './update-password-form';
 
 const sections = [
   { id: 'password', label: 'Password', icon: Lock, component: UpdatePasswordForm },
@@ -32,7 +31,7 @@ export const ChangeUserDetails = () => {
       >
         <span>Account Settings</span>
         <ChevronDownIcon
-          className={`h-4 w-4 transition-transform duration-200 ${isOpen ? '' : '-rotate-90'}`}
+          className={`h-4 w-4 transition-transform duration-200 ${isOpen ? '' : 'rotate-180'}`}
         />
       </Button>
 
@@ -50,7 +49,7 @@ export const ChangeUserDetails = () => {
                   <h3 className="font-medium text-gray-900">{section.label}</h3>
                 </div>
                 <div className="mt-3 pl-11">
-                  <FormComponent authClient={authClient} />
+                  <FormComponent />
                 </div>
                 {index < sections.length - 1 && <Separator className="mt-6" />}
               </div>

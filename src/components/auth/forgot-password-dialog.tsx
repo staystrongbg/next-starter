@@ -11,7 +11,7 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { authClient } from '@/lib/auth-client';
-import { forgotPasswordSchema } from '@/lib/valildations';
+import { forgotPasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
@@ -50,6 +50,7 @@ export const ForgotPasswordDialog = ({ open, onOpen }: ForgotPasswordDialogProps
 
     onSuccess: () => {
       form.reset();
+
       onOpen(false);
       toast.success('Password reset link sent');
     },
@@ -59,7 +60,15 @@ export const ForgotPasswordDialog = ({ open, onOpen }: ForgotPasswordDialogProps
     forgotPasswordMutation(data);
   };
   return (
-    <Dialog open={open} onOpenChange={onOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={newOpen => {
+        if (!newOpen) {
+          form.reset();
+        }
+        onOpen(newOpen);
+      }}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Forgot Password?</DialogTitle>
@@ -92,7 +101,7 @@ export const ForgotPasswordDialog = ({ open, onOpen }: ForgotPasswordDialogProps
               isLoading={isLoading}
               label="Send Reset Link"
               loadingLabel="Sending Reset Link..."
-              disabled={isLoading || isError}
+              disabled={isLoading}
             />
           </FieldGroup>
         </form>

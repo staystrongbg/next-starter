@@ -7,7 +7,8 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { authClient } from '@/lib/auth-client';
-import { resetPasswordSchema } from '@/lib/valildations';
+import { MIN_PASSWORD_STRENGTH_SCORE } from '@/lib/constants';
+import { resetPasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -22,6 +23,9 @@ export const ResetPasswordForm = () => {
   const token = searchParams.get('token');
   const router = useRouter();
 
+  if (!token) {
+    throw new Error('Reset token is missing. Please request a new password reset link.');
+  }
   const form = useForm({
     resolver: zodResolver(resetPasswordSchema),
     mode: 'onChange',
@@ -34,13 +38,8 @@ export const ResetPasswordForm = () => {
     mutate: resetPasswordMutation,
     isPending: isLoading,
     error,
-    isError,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof resetPasswordSchema>) => {
-      if (!token) {
-        throw new Error('Reset token is missing. Please request a new password reset link.');
-      }
-
       const { error } = await authClient.resetPassword({
         newPassword: data.newPassword,
         token,
@@ -61,6 +60,7 @@ export const ResetPasswordForm = () => {
   const onSubmit = (data: z.infer<typeof resetPasswordSchema>) => {
     resetPasswordMutation(data);
   };
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       {error && <FieldError className="text-red-500" errors={[error]} />}
@@ -100,10 +100,9 @@ export const ResetPasswordForm = () => {
           loadingLabel="Updating Password..."
           disabled={
             isLoading ||
-            isError ||
             !form.formState.isValid ||
             !form.formState.isDirty ||
-            strength.score < 2
+            strength.score < MIN_PASSWORD_STRENGTH_SCORE
           }
         />
       </FieldGroup>

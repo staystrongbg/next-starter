@@ -1,5 +1,6 @@
 const LINKS = [{ href: '/', label: 'Home' }];
 const MAX_PASSWORD_STRENGTH = 5;
+const MIN_PASSWORD_STRENGTH_SCORE = 2;
 
 const emailFrom = process.env.EMAIL_FROM as string;
 const gmailServicePassword = process.env.NODEMAILER_PASSWORD as string;
@@ -26,4 +27,5 @@ export {
   googleClientSecret,
   LINKS,
   MAX_PASSWORD_STRENGTH,
+  MIN_PASSWORD_STRENGTH_SCORE,
 };
