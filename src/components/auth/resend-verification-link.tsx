@@ -27,7 +27,7 @@ export default function ResendVerificationLink() {
       }
     },
     onSuccess: () => {
-      toast.success('Verification email sent successfully', {
+      toast.success('Verification email sent', {
         position: 'top-center',
         duration: 3000,
       });
@@ -57,7 +57,7 @@ export default function ResendVerificationLink() {
         {isVerified ? (
           <div className="text-center">
             <CheckCircle className="mx-auto h-10 w-10 text-green-500" />
-            <p className="text-center text-gray-600">Email verified successfully.</p>
+            <p className="text-center text-gray-600">Email verified</p>
           </div>
         ) : (
           <p className="text-center text-gray-600">
