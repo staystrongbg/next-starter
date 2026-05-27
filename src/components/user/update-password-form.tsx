@@ -39,7 +39,6 @@ export default function UpdatePasswordForm() {
     mutate: changePasswordMutation,
     isPending: isLoading,
     error,
-    isError,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof updatePasswordSchema>) => {
       const { error } = await authClient.changePassword({
@@ -127,11 +126,7 @@ export default function UpdatePasswordForm() {
           label="Update Password"
           loadingLabel="Updating Password..."
           disabled={
-            isLoading ||
-            isError ||
-            !form.formState.isValid ||
-            !form.formState.isDirty ||
-            strength.score < 2
+            isLoading || !form.formState.isValid || !form.formState.isDirty || strength.score < 2
           }
         />
       </FieldGroup>

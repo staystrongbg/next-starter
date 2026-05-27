@@ -34,7 +34,6 @@ export const UpdateNameForm = () => {
     mutate: updateNameMutation,
     isPending: isLoading,
     error,
-    isError,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof updateNameSchema>) => {
       const { error } = await authClient.updateUser({ name: data.name });
@@ -76,7 +75,7 @@ export const UpdateNameForm = () => {
         <SubmitButton
           label="Update Name"
           loadingLabel="Updating..."
-          isLoading={isLoading || isError}
+          isLoading={isLoading}
           disabled={isLoading}
         />
       </FieldGroup>

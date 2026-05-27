@@ -34,7 +34,6 @@ export default function UpdateEmailForm() {
     mutate: changeEmailMutation,
     isPending: isLoading,
     error,
-    isError,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof updateEmailSchema>) => {
       const { error } = await authClient.changeEmail({
@@ -80,7 +79,7 @@ export default function UpdateEmailForm() {
           isLoading={isLoading}
           label="Update Email"
           loadingLabel="Updating email..."
-          disabled={isError || isLoading || !form.formState.isValid}
+          disabled={isLoading || !form.formState.isValid}
         />
       </FieldGroup>
     </form>

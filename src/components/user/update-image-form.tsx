@@ -40,7 +40,6 @@ export default function UpdateImageForm() {
     mutate: updateImageMutation,
     isPending: isLoading,
     error,
-    isError,
   } = useMutation({
     mutationFn: async (data: z.infer<typeof updateImageSchema>) => {
       let imageUrl: string | undefined;
@@ -139,7 +138,7 @@ export default function UpdateImageForm() {
           label="Update Image"
           loadingLabel="Updating..."
           isLoading={isLoading}
-          disabled={isError || isLoading || !form.formState.isValid}
+          disabled={isLoading || !form.formState.isValid}
         />
       </FieldGroup>
     </form>
