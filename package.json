@@ -9,9 +9,7 @@
     "lint": "eslint",
     "format": "prettier src/ --write",
     "db:studio": "prisma studio --browser none --port 5555",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev"
+    "db:push": "prisma db push && prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
