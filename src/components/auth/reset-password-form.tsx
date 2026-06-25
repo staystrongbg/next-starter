@@ -1,5 +1,7 @@
 'use client';
 
+import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
+import { useToken } from '@/app/hooks/use-token';
 import { PasswordStrengthMeter } from '@/components/auth/password-strength-meter';
 import { TogglePasswordVisibility } from '@/components/auth/toggle-password-visibility';
 import { SubmitButton } from '@/components/shared/submit-button';
@@ -11,21 +13,16 @@ import { MIN_PASSWORD_STRENGTH_SCORE } from '@/lib/constants';
 import { resetPasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 export const ResetPasswordForm = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const searchParams = useSearchParams();
-  const token = searchParams.get('token');
+  const { isPasswordVisible, togglePasswordVisibility } = usePasswordVisibility();
+  const token = useToken();
   const router = useRouter();
 
-  if (!token) {
-    throw new Error('Reset token is missing. Please request a new password reset link.');
-  }
   const form = useForm({
     resolver: zodResolver(resetPasswordSchema),
     mode: 'onChange',
@@ -84,7 +81,7 @@ export const ResetPasswordForm = () => {
 
                 <TogglePasswordVisibility
                   isVisible={isPasswordVisible}
-                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  onClick={togglePasswordVisibility}
                 />
               </div>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

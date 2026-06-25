@@ -1,12 +1,14 @@
 'use client';
 
+import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
+import { useRedirect } from '@/app/hooks/use-redirect';
 import { authClient } from '@/lib/auth-client';
 import { signInSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
@@ -20,13 +22,11 @@ import { TogglePasswordVisibility } from './toggle-password-visibility';
 
 export const SignInForm = () => {
   const router = useRouter();
-  const [isVisible, setIsVisible] = useState(false);
   const [open, setOpen] = useState(false);
+  const { isPasswordVisible, togglePasswordVisibility } = usePasswordVisibility();
+  const { redirect } = useRedirect();
 
   const isSocialSignInEnabled = false; //remove when social sign in is implemented
-
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect');
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -103,14 +103,14 @@ export const SignInForm = () => {
                   <Input
                     {...field}
                     id="password"
-                    type={isVisible ? 'text' : 'password'}
+                    type={isPasswordVisible ? 'text' : 'password'}
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter your password"
                     autoComplete="off"
                   />
                   <TogglePasswordVisibility
-                    isVisible={isVisible}
-                    onClick={() => setIsVisible(!isVisible)}
+                    isVisible={isPasswordVisible}
+                    onClick={togglePasswordVisibility}
                   />
                 </div>
 

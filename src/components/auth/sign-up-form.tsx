@@ -1,5 +1,6 @@
 'use client';
 
+import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { authClient } from '@/lib/auth-client';
 import { signupSchema } from '@/lib/validations';
@@ -18,7 +19,7 @@ import { TogglePasswordVisibility } from './toggle-password-visibility';
 
 export const SignUpForm = () => {
   const router = useRouter();
-  const [isVisible, setIsVisible] = useState(false);
+  const { isPasswordVisible, togglePasswordVisibility } = usePasswordVisibility();
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 
   const form = useForm<z.infer<typeof signupSchema>>({
@@ -111,14 +112,14 @@ export const SignUpForm = () => {
                   <Input
                     {...field}
                     id="password"
-                    type={isVisible ? 'text' : 'password'}
+                    type={isPasswordVisible ? 'text' : 'password'}
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter your password"
                     autoComplete="off"
                   />
                   <TogglePasswordVisibility
-                    isVisible={isVisible}
-                    onClick={() => setIsVisible(!isVisible)}
+                    isVisible={isPasswordVisible}
+                    onClick={togglePasswordVisibility}
                   />
                 </div>
                 {fieldState.invalid && (

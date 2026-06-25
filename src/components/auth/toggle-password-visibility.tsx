@@ -16,9 +16,9 @@ export const TogglePasswordVisibility = ({
       title={isVisible ? 'Hide password' : 'Show password'}
     >
       {isVisible ? (
-        <Eye className="size-4 text-gray-500" />
-      ) : (
         <EyeOff className="size-4 text-gray-500" />
+      ) : (
+        <Eye className="size-4 text-gray-500" />
       )}
     </button>
   );

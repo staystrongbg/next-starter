@@ -1,3 +1,4 @@
+//  Helper function to get the user session in server components
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { cache } from 'react';

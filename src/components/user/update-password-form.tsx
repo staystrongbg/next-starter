@@ -1,5 +1,6 @@
 'use client';
 
+import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
@@ -7,7 +8,7 @@ import { authClient } from '@/lib/auth-client';
 import { updatePasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -19,8 +20,12 @@ import { SubmitButton } from '../shared/submit-button';
 export default function UpdatePasswordForm() {
   const session = authClient.useSession();
 
-  const [isPwdVisible, setIsPwdVisible] = useState(false);
-  const [isNewPwdVisible, setIsNewPwdVisible] = useState(false);
+  const {
+    isPasswordVisible,
+    togglePasswordVisibility,
+    isNewPasswordVisible,
+    toggleNewPasswordVisibility,
+  } = usePasswordVisibility();
 
   const form = useForm<z.infer<typeof updatePasswordSchema>>({
     resolver: zodResolver(updatePasswordSchema),
@@ -82,11 +87,11 @@ export default function UpdatePasswordForm() {
                   aria-invalid={fieldState.invalid}
                   placeholder="Current Password"
                   autoComplete="current-password"
-                  type={isPwdVisible ? 'text' : 'password'}
+                  type={isPasswordVisible ? 'text' : 'password'}
                 />
                 <TogglePasswordVisibility
-                  isVisible={isPwdVisible}
-                  onClick={() => setIsPwdVisible(!isPwdVisible)}
+                  isVisible={isPasswordVisible}
+                  onClick={togglePasswordVisibility}
                 />
               </div>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -106,12 +111,12 @@ export default function UpdatePasswordForm() {
                   aria-invalid={fieldState.invalid}
                   placeholder="New Password"
                   autoComplete="new-password"
-                  type={isNewPwdVisible ? 'text' : 'password'}
+                  type={isNewPasswordVisible ? 'text' : 'password'}
                 />
 
                 <TogglePasswordVisibility
-                  isVisible={isNewPwdVisible}
-                  onClick={() => setIsNewPwdVisible(!isNewPwdVisible)}
+                  isVisible={isNewPasswordVisible}
+                  onClick={toggleNewPasswordVisibility}
                 />
               </div>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
