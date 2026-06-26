@@ -7,7 +7,6 @@ import { signupSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 
@@ -19,8 +18,12 @@ import { TogglePasswordVisibility } from './toggle-password-visibility';
 
 export const SignUpForm = () => {
   const router = useRouter();
-  const { isPasswordVisible, togglePasswordVisibility } = usePasswordVisibility();
-  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const {
+    isPasswordVisible,
+    togglePasswordVisibility,
+    isConfirmPasswordVisible,
+    toggleConfirmPasswordVisibility,
+  } = usePasswordVisibility();
 
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
@@ -140,14 +143,14 @@ export const SignUpForm = () => {
                 <Input
                   {...field}
                   id="confirmPassword"
-                  type={isConfirmVisible ? 'text' : 'password'}
+                  type={isConfirmPasswordVisible ? 'text' : 'password'}
                   aria-invalid={fieldState.invalid}
                   placeholder="Confirm your password"
                   autoComplete="off"
                 />
                 <TogglePasswordVisibility
-                  isVisible={isConfirmVisible}
-                  onClick={() => setIsConfirmVisible(!isConfirmVisible)}
+                  isVisible={isConfirmPasswordVisible}
+                  onClick={toggleConfirmPasswordVisibility}
                 />
               </div>
               {fieldState.invalid && (
