@@ -1,6 +1,9 @@
 import { auth } from '@/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
+const protectedRoutes = ['/profile'];
+const authRoutes = ['/sign-in', '/sign-up', '/reset-password'];
+
 export async function proxy(request: NextRequest) {
   try {
     const url = new URL(request.url);
@@ -21,9 +24,12 @@ export async function proxy(request: NextRequest) {
     const isAuthenticated = !!session?.user;
     const { pathname } = request.nextUrl;
 
-    // If authenticated and trying to access auth pages, redirect to dashboard
-    if (isAuthenticated && (pathname === '/sign-in' || pathname === '/sign-up')) {
+    if (isAuthenticated && authRoutes.some(route => pathname.startsWith(route))) {
       return NextResponse.redirect(new URL('/profile', request.url));
+    }
+
+    if (!isAuthenticated && protectedRoutes.some(route => pathname.startsWith(route))) {
+      return NextResponse.redirect(new URL('/sign-in', request.url));
     }
 
     return NextResponse.next();
@@ -32,11 +38,10 @@ export async function proxy(request: NextRequest) {
     if (process.env.NODE_ENV === 'development') {
       console.error('Middleware error:', error);
     }
-    // Continue with request to avoid breaking the app
     return NextResponse.next();
   }
 }
 
 export const config = {
-  matcher: ['/sign-in', '/sign-up', '/reset-password'],
+  matcher: ['/profile', '/sign-in', '/sign-up', '/reset-password'],
 };

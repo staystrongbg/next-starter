@@ -153,7 +153,7 @@ function FolderStructure() {
           Organized by feature for easy navigation
         </p>
       </div>
-      <div className="h-[50vh] w-full overflow-y-scroll rounded-xl border border-gray-200 bg-blue-950 dark:border-gray-700">
+      <div className="h-[50vh] w-full overflow-y-scroll rounded-xl border border-gray-200 bg-gray-200 dark:border-gray-700 dark:bg-gray-900">
         <div className="bg-gray-700 px-4 py-2 text-xs font-medium text-orange-500">
           next-starter/
         </div>
@@ -176,7 +176,7 @@ function FolderStructure() {
                     className={
                       isFolder
                         ? 'text-blue-500 dark:text-blue-400'
-                        : 'text-gray-300 dark:text-gray-200'
+                        : 'text-gray-700 dark:text-gray-200'
                     }
                   >
                     {item.name}
