@@ -103,7 +103,11 @@ export default function UpdateImageForm() {
                 <FieldLabel htmlFor={field.name}>
                   Image
                   <Avatar>
-                    <AvatarImage src={previewUrl || user.image || undefined} alt="user-avatar" />
+                    <AvatarImage
+                      src={previewUrl || user.image || undefined}
+                      alt="user-avatar"
+                      className="object-cover"
+                    />
                     <AvatarFallback>{generateUserAvatar({ user })}</AvatarFallback>
                   </Avatar>
                 </FieldLabel>

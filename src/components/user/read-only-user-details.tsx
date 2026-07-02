@@ -12,7 +12,7 @@ export const ReadOnlyUserDetails = ({ user }: { user: User }) => {
   return (
     <div className="flex flex-col items-center gap-4">
       <Avatar className="h-20 w-20">
-        <AvatarImage src={user.image || undefined} alt="user-avatar" />
+        <AvatarImage src={user.image || undefined} alt="user-avatar" className="object-cover" />
         <AvatarFallback className="text-lg">{generateUserAvatar({ user })}</AvatarFallback>
       </Avatar>
 

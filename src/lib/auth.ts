@@ -1,27 +1,20 @@
-import { PrismaClient } from '@/generated/prisma/client';
-import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 
 import {
   baseUrl,
-  databaseUrl,
   emailFrom,
   githubClientId,
   githubClientSecret,
   googleClientId,
   googleClientSecret,
 } from './constants';
+import { prisma } from './prisma';
 import { sendMail } from './send-email';
 
-const adapter = new PrismaLibSql({
-  url: databaseUrl,
-});
-
-const prisma = new PrismaClient({ adapter });
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
-    provider: 'sqlite', // or "mysql", "postgresql", ...etc
+    provider: 'postgresql', // or "mysql", "postgresql", ...etc
   }),
   baseURL: baseUrl,
   emailAndPassword: {
