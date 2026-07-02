@@ -12,8 +12,7 @@ export async function proxy(request: NextRequest) {
     if (url.pathname === '/reset-password') {
       const token = url.searchParams.get('token');
       if (!token) {
-        // No token provided, redirect to not found
-        return NextResponse.redirect(new URL('/not-found', request.url));
+        return NextResponse.redirect(new URL('/sign-in', request.url));
       }
     }
 
