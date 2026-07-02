@@ -1,4 +1,3 @@
-import { GuestSession } from '@/components/auth/guest-session';
 import { NotificationBoard } from '@/components/shared/notification-board';
 import { Database, FileCode, Folder, Layers, Rocket, Shield, Zap } from 'lucide-react';
 
@@ -111,10 +110,9 @@ export default function Home() {
           Build faster with a complete foundation
         </h1>
         <p className="max-w-xl text-lg text-gray-600 dark:text-gray-400">
-          Everything you need to start building production-ready, small-to-medium, applications.
-          TypeScript, Tailwind CSS, authentication, and sqlite database — all pre-configured
+          Everything you need to start building production-ready applications. TypeScript, Tailwind
+          CSS, authentication, and neon postgresql database — all pre-configured
         </p>
-        <GuestSession />
       </div>
 
       <Features />

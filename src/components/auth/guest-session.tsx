@@ -4,7 +4,7 @@ import { authClient } from '@/lib/auth-client';
 import { Loader2Icon } from 'lucide-react';
 import Link from 'next/link';
 
-import { Button } from '../ui/button';
+const linkStyle = 'underline hover:underline-offset-4';
 
 export const GuestSession = () => {
   const session = authClient.useSession();
@@ -18,27 +18,18 @@ export const GuestSession = () => {
   }
 
   if (!session.data) {
-    const buttonClassName = 'bg-blue-500 hover:bg-blue-600';
-
     return (
       <div className="flex items-center justify-center gap-2">
-        <Button asChild variant="default" size="default" className={buttonClassName}>
-          <Link href="/sign-in">Sign In</Link>
-        </Button>
-        <Button asChild variant="default" size="default" className={buttonClassName}>
-          <Link href="/sign-up">Sign Up</Link>
-        </Button>
+        <Link className={linkStyle} href="/sign-up">
+          Sign Up
+        </Link>
+        <span>|</span>
+        <Link className={linkStyle} href="/sign-in">
+          Sign In
+        </Link>
       </div>
     );
   }
 
-  // Signed in state
-  return (
-    <div className="flex items-center justify-center gap-2">
-      <span className="text-sm text-gray-600">Welcome back, </span>
-      <span className="font-medium">{session.data.user?.name ?? 'User'}</span>
-    </div>
-  );
+  return null;
 };
-
-const buttonStyles = 'bg-blue-500 hover:bg-blue-600';
