@@ -1,10 +1,15 @@
 {
   // Enable automatic formatting on save for better code consistency
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": "file",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.wordWrap": "on",
+  "editor.bracketPairColorization.enabled": "true",
   // Configure code actions to run automatically on save
   "editor.codeActionsOnSave": {
     // Run all available fixes (e.g., ESLint, TypeScript) - consider "explicit" if performance issues occur
-    "source.fixAll": "always",
+    "source.fixAll": "explicit",
+
     // Automatically organize import statements for cleaner code
     "source.organizeImports": "always"
   }

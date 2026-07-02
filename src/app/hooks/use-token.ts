@@ -7,7 +7,8 @@ export const useToken = () => {
   const token = searchParams.get('token');
 
   if (!token) {
-    throw new Error('Token is missing.');
+    throw new Error('Token is required');
   }
+
   return token;
 };

@@ -101,17 +101,16 @@ export default function Home() {
           and enable the providers in the auth configuration
         </NotificationBoard>
         <NotificationBoard>
-          To setup your db modify <code>schema.prisma</code> file and run{' '}
-          <code>bun db:generate</code> and <code>bun db:push</code>
+          To setup your db modify <code>schema.prisma</code> file and run <code>bun db:push</code>
         </NotificationBoard>
         <div className="flex items-center gap-2 text-sm font-medium">
           <Rocket className="h-4 w-4 text-orange-600" />
           <span className="text-blue-600">Next.js Starter Kit</span>
         </div>
-        <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-gray-100">
           Build faster with a complete foundation
         </h1>
-        <p className="max-w-xl text-lg text-gray-600">
+        <p className="max-w-xl text-lg text-gray-600 dark:text-gray-400">
           Everything you need to start building production-ready, small-to-medium, applications.
           TypeScript, Tailwind CSS, authentication, and sqlite database — all pre-configured
         </p>
@@ -130,14 +129,14 @@ function Features() {
       {features.map(feature => (
         <div
           key={feature.title}
-          className="group flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 transition-shadow hover:shadow-md"
+          className="group flex flex-col gap-4 rounded-xl border border-gray-200 bg-gray-50 p-6 transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-            <feature.icon className="h-5 w-5" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg text-blue-600 dark:bg-gray-700 dark:text-blue-400">
+            <feature.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{feature.title}</h3>
-            <p className="mt-1 text-sm text-gray-600">{feature.description}</p>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">{feature.title}</h3>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{feature.description}</p>
           </div>
         </div>
       ))}
@@ -149,10 +148,12 @@ function FolderStructure() {
   return (
     <div className="w-full" aria-label="Project structure">
       <div className="mb-6 text-center">
-        <h2 className="text-2xl font-bold text-gray-900">Project Structure</h2>
-        <p className="mt-2 text-gray-600">Organized by feature for easy navigation</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Project Structure</h2>
+        <p className="mt-2 text-gray-600 dark:text-gray-400">
+          Organized by feature for easy navigation
+        </p>
       </div>
-      <div className="h-[50vh] w-full overflow-y-scroll rounded-xl border border-gray-200 bg-blue-950">
+      <div className="h-[50vh] w-full overflow-y-scroll rounded-xl border border-gray-200 bg-gray-200 dark:border-gray-700 dark:bg-gray-900">
         <div className="bg-gray-700 px-4 py-2 text-xs font-medium text-orange-500">
           next-starter/
         </div>
@@ -163,15 +164,23 @@ function FolderStructure() {
               return (
                 <div
                   key={index}
-                  className="flex items-center gap-2 py-1 text-gray-200"
+                  className="flex items-center gap-2 py-1 text-gray-200 dark:text-gray-300"
                   style={{ paddingLeft: `${item.indent * 1.5}rem` }}
                 >
                   {isFolder ? (
-                    <Folder className="h-4 w-4 text-blue-500" />
+                    <Folder className="h-4 w-4 text-blue-500 dark:text-blue-400" />
                   ) : (
-                    <FileCode className="h-4 w-4 text-gray-400" />
+                    <FileCode className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                   )}
-                  <span className={isFolder ? 'text-blue-500' : 'text-gray-300'}>{item.name}</span>
+                  <span
+                    className={
+                      isFolder
+                        ? 'text-blue-500 dark:text-blue-400'
+                        : 'text-gray-700 dark:text-gray-200'
+                    }
+                  >
+                    {item.name}
+                  </span>
                 </div>
               );
             })}
