@@ -29,7 +29,7 @@ export const ChangeUserDetails = () => {
         aria-expanded={isOpen}
         aria-controls="account-settings"
       >
-        <span>Account Settings</span>
+        <span className="text-gray-900 dark:text-white">Account Settings</span>
         <ChevronDownIcon
           className={`h-4 w-4 transition-transform duration-200 ${isOpen ? '' : 'rotate-180'}`}
         />
@@ -43,10 +43,10 @@ export const ChangeUserDetails = () => {
             return (
               <div key={section.id}>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100">
-                    <Icon className="h-4 w-4 text-gray-600" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
+                    <Icon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                   </div>
-                  <h3 className="font-medium text-gray-900">{section.label}</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-white">{section.label}</h3>
                 </div>
                 <div className="mt-3 pl-11">
                   <FormComponent />
