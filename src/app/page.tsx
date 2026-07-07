@@ -81,26 +81,29 @@ const fileTree = [
   { name: '.env.example', type: 'file', indent: 0 },
   { name: '.vscode/', type: 'folder', indent: 0 },
   { name: 'settings.json', type: 'file', indent: 1 },
-  { name: 'dev.db', type: 'file', indent: 0 },
 ];
 
 export default function Home() {
   return (
     <div className="mx-auto flex max-w-5xl flex-col items-center gap-16 px-4 py-12">
       <div className="flex flex-col items-center gap-6 text-center">
-        <NotificationBoard type="warning">
-          Note that experimental Nextjs <b>AuthInterups</b> feature is enabled for handling
-          unauthorized redirections
+        <NotificationBoard>
+          Note that experimental Nextjs{' '}
+          <CodeBlock bg="bg-blue-200 dark:bg-blue-950">AuthInterups</CodeBlock> feature is enabled
+          for handling unauthorized redirections
         </NotificationBoard>
         <NotificationBoard>
-          Start by filling out the <code>.env.example</code> file
+          <CodeBlock bg="bg-blue-200 dark:bg-blue-950">.env.example</CodeBlock> is a good place to
+          start
         </NotificationBoard>
         <NotificationBoard>
           To use Github or any social authentication, set up the corresponding environment variables
-          and enable the providers in the auth configuration
+          and enable the providers in the{' '}
+          <CodeBlock bg="bg-blue-200 dark:bg-blue-950">auth.ts</CodeBlock>
         </NotificationBoard>
         <NotificationBoard>
-          To setup your db modify <code>schema.prisma</code> file and run <code>bun db:push</code>
+          Modify <CodeBlock bg="bg-blue-200 dark:bg-blue-950">schema.prisma</CodeBlock> file and run{' '}
+          <CodeBlock bg="bg-blue-200 dark:bg-blue-950">db:push</CodeBlock>
         </NotificationBoard>
         <div className="flex items-center gap-2 text-sm font-medium">
           <Rocket className="h-4 w-4 text-orange-600" />
@@ -188,3 +191,11 @@ function FolderStructure() {
     </div>
   );
 }
+
+const CodeBlock = ({ bg, children }: { bg: string; children: React.ReactNode }) => {
+  return (
+    <span className={bg}>
+      <code className="p-2">{children}</code>
+    </span>
+  );
+};

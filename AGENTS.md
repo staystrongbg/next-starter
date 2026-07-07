@@ -2,7 +2,7 @@
 
 ## Environment Setup
 
-- **Database URL**: Set in `.env` as `DATABASE_URL="file:./dev.db"`
+- **Database URL**: Set in `.env` as `DATABASE_URL="postgresql://..."` (Neon PostgreSQL)
 - **Auth secret**: `BETTER_AUTH_SECRET="HiIX74SFC4HicrpJO8kGDTdCsqW6RUhk"`
 - **Base URL**: `BETTER_AUTH_URL="http://localhost:3000"`
 - **Email configuration**: Set `NODEMAILER_EMAIL` and `EMAIL_FROM` in `.env`
@@ -24,7 +24,7 @@
 
 - **Root layout**: `src/app/layout.tsx` - App providers and global setup
 - **Providers**: `src/providers.tsx` - QueryClient for TanStack Query
-- **Auth**: `src/lib/auth.ts` - Better Auth configuration with SQLite
+- **Auth**: `src/lib/auth.ts` - Better Auth configuration with PostgreSQL
 - **Prisma**: Generated in `src/generated/prisma/`
 - **Theme**: `next-themes` with system preference support
 - **Notifications**: Sonner toasts positioned bottom-right
@@ -32,7 +32,6 @@
 ## Build Artifacts
 
 - `.next/` - Next.js build output
-- `dev.db` - SQLite database file (in root)
 - `prisma/migrations/` - Database migration history
 - `tsconfig.tsbuildinfo` - TypeScript incremental compilation cache
 

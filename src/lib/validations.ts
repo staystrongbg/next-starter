@@ -9,8 +9,8 @@ const signupSchema = z
   .object({
     name: z.string().min(3).trim(),
     email: z.email().trim().toLowerCase(),
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8),
+    password: z.string().min(8, 'Password must be at least 8 characters long'),
+    confirmPassword: z.string().min(8, 'Confirm password must be at least 8 characters long'),
   })
   .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -34,7 +34,7 @@ const updateImageSchema = z.object({
 });
 
 const updateNameSchema = z.object({
-  name: z.string().trim().min(3, 'Name is required.'),
+  name: z.string().trim().min(3, 'Name is required'),
 });
 
 const updatePasswordSchema = z
@@ -42,7 +42,7 @@ const updatePasswordSchema = z
     currentPassword: z
       .string()
       .trim()
-      .nonempty('Current password is required')
+      .min(3, 'Current password is required')
       .min(8, 'Must be at least 8 characters'),
     newPassword: z.string().trim().min(8, 'New password must be at least 8 characters long'),
   })
