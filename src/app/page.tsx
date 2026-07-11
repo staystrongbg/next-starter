@@ -1,7 +1,7 @@
 import { NotificationBoard } from '@/components/shared/notification-board';
 import { Database, FileCode, Folder, Layers, Rocket, Shield, Zap } from 'lucide-react';
 
-const features = [
+const features: Feature[] = [
   {
     icon: Shield,
     title: 'Authentication',
@@ -34,7 +34,7 @@ const features = [
   },
 ];
 
-const fileTree = [
+const fileTree: FileTreeItem[] = [
   { name: 'src/', type: 'folder', indent: 0 },
   { name: 'app/', type: 'folder', indent: 1 },
   { name: '(auth)/', type: 'folder', indent: 2 },
@@ -83,28 +83,53 @@ const fileTree = [
   { name: 'settings.json', type: 'file', indent: 1 },
 ];
 
+interface FileTreeItem {
+  name: string;
+  type: 'folder' | 'file';
+  indent: number;
+}
+interface Feature {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+}
+interface Notification {
+  text: string;
+  type?: 'info' | 'warning' | 'error';
+}
+
+const notifications: Notification[] = [
+  {
+    text: 'Note that experimental Nextjs `AuthInterups` feature is enabled for handling unauthorized redirections',
+  },
+  { text: '`.env.example` is a good place to start' },
+  {
+    text: 'To use Github or any social authentication, set up the corresponding environment variables and enable the providers in the `auth.ts`',
+  },
+  { text: 'Modify `schema.prisma` file and run `db:push`' },
+];
+
+function renderInlineCode(text: string): React.ReactNode {
+  const parts = text.split(/(`[^`]+`)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return (
+        <code key={i} className="rounded bg-gray-200 px-1 py-0.5 text-sm dark:bg-gray-800">
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return part;
+  });
+}
+
 export default function Home() {
   return (
     <div className="mx-auto flex max-w-5xl flex-col items-center gap-16 px-4 py-12">
       <div className="flex flex-col items-center gap-6 text-center">
-        <NotificationBoard>
-          Note that experimental Nextjs{' '}
-          <CodeBlock bg="bg-blue-200 dark:bg-blue-950">AuthInterups</CodeBlock> feature is enabled
-          for handling unauthorized redirections
-        </NotificationBoard>
-        <NotificationBoard>
-          <CodeBlock bg="bg-blue-200 dark:bg-blue-950">.env.example</CodeBlock> is a good place to
-          start
-        </NotificationBoard>
-        <NotificationBoard>
-          To use Github or any social authentication, set up the corresponding environment variables
-          and enable the providers in the{' '}
-          <CodeBlock bg="bg-blue-200 dark:bg-blue-950">auth.ts</CodeBlock>
-        </NotificationBoard>
-        <NotificationBoard>
-          Modify <CodeBlock bg="bg-blue-200 dark:bg-blue-950">schema.prisma</CodeBlock> file and run{' '}
-          <CodeBlock bg="bg-blue-200 dark:bg-blue-950">db:push</CodeBlock>
-        </NotificationBoard>
+        {notifications.map((notification, index) => (
+          <NotificationBoard key={index}>{renderInlineCode(notification.text)}</NotificationBoard>
+        ))}
         <div className="flex items-center gap-2 text-sm font-medium">
           <Rocket className="h-4 w-4 text-orange-600" />
           <span className="text-blue-600">Next.js Starter Kit</span>
@@ -130,7 +155,7 @@ function Features() {
       {features.map(feature => (
         <div
           key={feature.title}
-          className="group flex flex-col gap-4 rounded-xl border border-gray-200 bg-gray-50 p-6 transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+          className="group flex flex-col gap-4 rounded-xl border border-gray-200 bg-gray-50 p-6 transition-shadow hover:border-violet-700 dark:border-gray-800 dark:bg-gray-900 hover:dark:border-violet-900"
         >
           <div className="flex h-10 w-10 items-center justify-center rounded-lg text-blue-600 dark:bg-gray-700 dark:text-blue-400">
             <feature.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -191,11 +216,3 @@ function FolderStructure() {
     </div>
   );
 }
-
-const CodeBlock = ({ bg, children }: { bg: string; children: React.ReactNode }) => {
-  return (
-    <span className={bg}>
-      <code className="p-2">{children}</code>
-    </span>
-  );
-};

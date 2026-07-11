@@ -18,7 +18,7 @@ export const UserDropdown = () => {
 
   if (session.isPending) {
     return (
-      <div className="text-sm text-gray-700">
+      <div className="flex items-center justify-center">
         <Loader2Icon className="animate-spin" />
       </div>
     );

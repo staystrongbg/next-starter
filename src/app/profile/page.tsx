@@ -1,5 +1,7 @@
+import { Skeleton } from '@/components/ui/skeleton';
 import { UserDetails } from '@/components/user/user-details';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Profile',
@@ -15,7 +17,18 @@ export default function ProfilePage() {
           <p className="mt-1 text-sm text-gray-500">Manage your account settings and preferences</p>
         </div>
         <div className="p-6">
-          <UserDetails />
+          <Suspense
+            fallback={
+              <div className="flex flex-col items-center justify-center gap-8">
+                <Skeleton className="h-20 w-20 rounded-full" />
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+            }
+          >
+            <UserDetails />
+          </Suspense>
         </div>
       </div>
     </div>

@@ -28,7 +28,9 @@ export async function proxy(request: NextRequest) {
     }
 
     if (!isAuthenticated && protectedRoutes.some(route => pathname.startsWith(route))) {
-      return NextResponse.redirect(new URL('/sign-in', request.url));
+      return NextResponse.redirect(
+        new URL('/sign-in?redirect=' + encodeURIComponent(pathname), request.url),
+      );
     }
 
     return NextResponse.next();
