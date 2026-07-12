@@ -1,42 +1,16 @@
 'use client';
 
+import { useResendVerificationEmail } from '@/app/hooks/use-resend-verification-email';
 import { authClient } from '@/lib/auth-client';
-import { useMutation } from '@tanstack/react-query';
 import { CheckCircle } from 'lucide-react';
 import { unauthorized } from 'next/navigation';
-import { toast } from 'sonner';
 
 import { SubmitButton } from '../shared/submit-button';
 import { Skeleton } from '../ui/skeleton';
 
 export default function ResendVerificationLink() {
   const session = authClient.useSession();
-
-  const {
-    mutate: resendVerification,
-    isPending,
-    error,
-  } = useMutation({
-    mutationFn: async () => {
-      const email = session.data?.user.email;
-      if (!email) {
-        throw new Error('No email found');
-      }
-      const { error } = await authClient.sendVerificationEmail({
-        email,
-        callbackURL: '/profile',
-      });
-      if (error) {
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      toast.success('Verification email sent', {
-        position: 'top-center',
-        duration: 3000,
-      });
-    },
-  });
+  const { mutate: resendVerification, isPending: isLoading, error } = useResendVerificationEmail();
 
   if (session.isPending) {
     return (
@@ -77,7 +51,7 @@ export default function ResendVerificationLink() {
           label="Send Verification Link"
           type="button"
           loadingLabel="Sending..."
-          isLoading={isPending}
+          isLoading={isLoading}
           onClick={() => resendVerification()}
         />
       )}

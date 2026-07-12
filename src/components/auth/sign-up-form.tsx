@@ -1,14 +1,10 @@
 'use client';
 
 import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
+import { useSignUp } from '@/app/hooks/use-signup';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
-import { authClient } from '@/lib/auth-client';
-import { signupSchema } from '@/lib/validations';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { Controller, useForm } from 'react-hook-form';
-import z from 'zod';
+import { Controller } from 'react-hook-form';
 
 import { SubmitButton } from '../shared/submit-button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
@@ -25,42 +21,11 @@ export const SignUpForm = () => {
     toggleConfirmPasswordVisibility,
   } = usePasswordVisibility();
 
-  const form = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
-  });
+  const { form, onSubmit, isLoading, error } = useSignUp();
 
   const newPasswordValue = form.watch('password');
   const strength = getPasswordStrength(newPasswordValue);
 
-  const {
-    mutate: signUpMutation,
-    isPending: isLoading,
-    error,
-  } = useMutation({
-    mutationFn: async (data: z.infer<typeof signupSchema>) => {
-      const { error } = await authClient.signUp.email({
-        email: data.email,
-        password: data.password,
-        name: data.name,
-      });
-      if (error) {
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      router.push('/sign-in');
-    },
-  });
-
-  const onSubmit = (data: z.infer<typeof signupSchema>) => {
-    signUpMutation(data);
-  };
   return (
     <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>

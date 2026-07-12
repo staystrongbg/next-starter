@@ -1,16 +1,9 @@
 'use client';
 
 import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
-import { useRedirect } from '@/app/hooks/use-redirect';
+import { useSignIn } from '@/app/hooks/use-signin';
 import { authClient } from '@/lib/auth-client';
-import { signInSchema } from '@/lib/validations';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import z from 'zod';
+import { Controller } from 'react-hook-form';
 
 import { SubmitButton } from '../shared/submit-button';
 import { Button } from '../ui/button';
@@ -20,47 +13,14 @@ import { ForgotPasswordDialog } from './forgot-password-dialog';
 import { TogglePasswordVisibility } from './toggle-password-visibility';
 
 export const SignInForm = () => {
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
   const { isPasswordVisible, togglePasswordVisibility } = usePasswordVisibility();
-  const { redirect } = useRedirect();
+  const { form, onSubmit, isLoading, error } = useSignIn();
 
   const isSocialSignInEnabled = false; //remove when social sign in is implemented
 
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
-
-  const {
-    mutate: signInMutation,
-    isPending: isLoading,
-    error,
-  } = useMutation({
-    mutationFn: async (data: z.infer<typeof signInSchema>) => {
-      const { error } = await authClient.signIn.email({
-        email: data.email,
-        password: data.password,
-      });
-      if (error) {
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      form.reset();
-      router.push(redirect || '/');
-    },
-  });
-
-  const onSubmit = (data: z.infer<typeof signInSchema>) => {
-    signInMutation(data);
-  };
   return (
     <>
-      <form id="sign-in-form" onSubmit={form.handleSubmit(onSubmit)}>
+      <form id="sign-in-form" onSubmit={onSubmit}>
         <FieldGroup>
           {error && <FieldError className="text-red-500" errors={[error]} />}
 
@@ -92,9 +52,7 @@ export const SignInForm = () => {
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                   <p className="text-xs">
                     Forgot Password?{' '}
-                    <Link href="#" onClick={() => setOpen(true)} className="text-blue-500">
-                      Click here
-                    </Link>
+                    <ForgotPasswordDialog />
                   </p>
                 </div>
 
@@ -168,7 +126,6 @@ export const SignInForm = () => {
           GitHub
         </Button>
       </div>
-      <ForgotPasswordDialog open={open} onOpen={setOpen} />
     </>
   );
 };

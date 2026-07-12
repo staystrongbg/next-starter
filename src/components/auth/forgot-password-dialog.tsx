@@ -1,5 +1,6 @@
 'use client';
 
+import { useForgotPassword } from '@/app/hooks/use-forgot-password';
 import { SubmitButton } from '@/components/shared/submit-button';
 import {
   Dialog,
@@ -7,68 +8,31 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { authClient } from '@/lib/auth-client';
-import { forgotPasswordSchema } from '@/lib/validations';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { Controller, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { Controller } from 'react-hook-form';
 
-interface ForgotPasswordDialogProps {
-  open: boolean;
-  onOpen: (open: boolean) => void;
-}
+export const ForgotPasswordDialog = () => {
+  const { form, isLoading, error, onSubmit, open, setDialogOpen } =
+    useForgotPassword();
 
-export const ForgotPasswordDialog = ({ open, onOpen }: ForgotPasswordDialogProps) => {
-  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
-    resolver: zodResolver(forgotPasswordSchema),
-    mode: 'onChange',
-    defaultValues: {
-      email: '',
-    },
-  });
-
-  const {
-    mutate: forgotPasswordMutation,
-    isPending: isLoading,
-    error,
-    isError,
-  } = useMutation({
-    mutationFn: async (data: z.infer<typeof forgotPasswordSchema>) => {
-      const { error } = await authClient.requestPasswordReset({
-        email: data.email,
-        redirectTo: '/reset-password',
-      });
-      if (error) {
-        throw error;
-      }
-    },
-
-    onSuccess: () => {
-      form.reset();
-
-      onOpen(false);
-      toast.success('Password reset link sent');
-    },
-  });
-
-  const onSubmit = (data: z.infer<typeof forgotPasswordSchema>) => {
-    forgotPasswordMutation(data);
-  };
   return (
     <Dialog
       open={open}
-      onOpenChange={newOpen => {
+      onOpenChange={(newOpen) => {
         if (!newOpen) {
           form.reset();
         }
-        onOpen(newOpen);
+        setDialogOpen(newOpen);
       }}
     >
+      <DialogTrigger asChild>
+        <button type="button" className="cursor-pointer text-blue-500">
+          Click here
+        </button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Forgot Password?</DialogTitle>
