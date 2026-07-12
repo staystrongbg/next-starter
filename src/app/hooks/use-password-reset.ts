@@ -1,3 +1,5 @@
+'use client';
+
 import { useToken } from '@/app/hooks/use-token';
 import { authClient } from '@/lib/auth-client';
 import { resetPasswordSchema } from '@/lib/validations';

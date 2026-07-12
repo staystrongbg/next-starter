@@ -12,7 +12,7 @@ export const Navigation = () => {
       {LINKS.map(item => {
         const isActive = item.href === pathname;
         return (
-          <Link key={item.label} href={item.href} className={isActive ? 'text-blue-500' : ''}>
+          <Link key={item.label} href={item.href} className={isActive ? 'text-violet-700' : ''}>
             {item.label}
           </Link>
         );

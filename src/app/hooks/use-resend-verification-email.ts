@@ -1,3 +1,5 @@
+'use client';
+
 import { authClient } from '@/lib/auth-client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
