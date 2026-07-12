@@ -20,7 +20,11 @@ export const ResetPasswordForm = () => {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      {error && <FieldError className="text-red-500" errors={[error]} />}
+      {error && (
+        <FieldError
+          errors={[error?.message ? error : { message: 'Something went wrong. Please try again.' }]}
+        />
+      )}
 
       <FieldGroup>
         <Controller

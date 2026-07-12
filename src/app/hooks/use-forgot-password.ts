@@ -4,7 +4,7 @@ import { authClient } from '@/lib/auth-client';
 import { forgotPasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -19,7 +19,7 @@ export const useForgotPassword = () => {
     },
   });
 
-  const mutation = useMutation({
+  const { mutate, isPending, error, reset } = useMutation({
     mutationFn: async (data: z.infer<typeof forgotPasswordSchema>) => {
       const { error } = await authClient.requestPasswordReset({
         email: data.email,
@@ -31,14 +31,22 @@ export const useForgotPassword = () => {
     },
 
     onSuccess: () => {
-      form.reset();
       setDialogOpen(false);
+      form.reset();
       toast.success('Password reset link sent');
+    },
+    onError: err => {
+      toast.error(err?.message || 'Something went wrong. Please try again.');
     },
   });
 
+  useEffect(() => {
+    const subscription = form.watch(() => reset());
+    return () => subscription.unsubscribe();
+  }, [form, reset]);
+
   const onSubmit = (data: z.infer<typeof forgotPasswordSchema>) => {
-    mutation.mutate(data);
+    mutate(data);
   };
 
   const setDialogOpen = (value: boolean) => {
@@ -47,9 +55,9 @@ export const useForgotPassword = () => {
 
   return {
     form,
-    isLoading: mutation.isPending,
-    error: mutation.error,
-    isError: mutation.isError,
+    isLoading: isPending,
+    error,
+    isError: !!error,
     onSubmit,
     open,
     setDialogOpen,

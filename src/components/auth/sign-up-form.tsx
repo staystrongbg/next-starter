@@ -3,7 +3,6 @@
 import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
 import { useSignUp } from '@/app/hooks/use-signup';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
-import { useRouter } from 'next/navigation';
 import { Controller } from 'react-hook-form';
 
 import { SubmitButton } from '../shared/submit-button';
@@ -13,7 +12,6 @@ import { PasswordStrengthMeter } from './password-strength-meter';
 import { TogglePasswordVisibility } from './toggle-password-visibility';
 
 export const SignUpForm = () => {
-  const router = useRouter();
   const {
     isPasswordVisible,
     togglePasswordVisibility,
@@ -29,7 +27,13 @@ export const SignUpForm = () => {
   return (
     <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
-        {error && <FieldError className="text-red-500" errors={[error]} />}
+        {error && (
+          <FieldError
+            errors={[
+              error?.message ? error : { message: 'Something went wrong. Please try again.' },
+            ]}
+          />
+        )}
 
         <Controller
           name="name"
@@ -43,9 +47,7 @@ export const SignUpForm = () => {
                 aria-invalid={fieldState.invalid}
                 placeholder="Enter your name"
               />
-              {fieldState.invalid && (
-                <FieldError className="text-red-500" errors={[fieldState.error]} />
-              )}
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
@@ -62,9 +64,7 @@ export const SignUpForm = () => {
                 aria-invalid={fieldState.invalid}
                 placeholder="Enter your email"
               />
-              {fieldState.invalid && (
-                <FieldError className="text-red-500" errors={[fieldState.error]} />
-              )}
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
@@ -90,9 +90,7 @@ export const SignUpForm = () => {
                     onClick={togglePasswordVisibility}
                   />
                 </div>
-                {fieldState.invalid && (
-                  <FieldError className="text-red-500" errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
           />
@@ -118,9 +116,7 @@ export const SignUpForm = () => {
                   onClick={toggleConfirmPasswordVisibility}
                 />
               </div>
-              {fieldState.invalid && (
-                <FieldError className="text-red-500" errors={[fieldState.error]} />
-              )}
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />

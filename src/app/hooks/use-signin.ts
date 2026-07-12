@@ -5,7 +5,9 @@ import { signInSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { useRedirect } from './use-redirect';
@@ -22,7 +24,7 @@ export const useSignIn = () => {
     },
   });
 
-  const mutation = useMutation({
+  const { mutate, isPending, error, reset } = useMutation({
     mutationFn: async (data: z.infer<typeof signInSchema>) => {
       const { error } = await authClient.signIn.email({
         email: data.email,
@@ -36,15 +38,23 @@ export const useSignIn = () => {
       form.reset();
       router.push(redirect || '/');
     },
+    onError: err => {
+      toast.error(err?.message || 'Something went wrong. Please try again.');
+    },
   });
 
-  const onSubmit = form.handleSubmit(data => mutation.mutate(data));
+  useEffect(() => {
+    const subscription = form.watch(() => reset());
+    return () => subscription.unsubscribe();
+  }, [form, reset]);
+
+  const onSubmit = form.handleSubmit(data => mutate(data));
 
   return {
     form,
-    mutation,
+    mutation: { mutate, isPending, error, reset },
     onSubmit,
-    isLoading: mutation.isPending,
-    error: mutation.error,
+    isLoading: isPending,
+    error,
   };
 };

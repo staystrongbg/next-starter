@@ -27,5 +27,8 @@ export const useResendVerificationEmail = () => {
         duration: 3000,
       });
     },
+    onError: (err) => {
+      toast.error(err?.message || 'Something went wrong. Please try again.');
+    },
   });
 };

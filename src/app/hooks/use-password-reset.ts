@@ -6,6 +6,7 @@ import { resetPasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -22,11 +23,7 @@ export const usePasswordReset = () => {
     },
   });
 
-  const {
-    mutate: resetPasswordMutation,
-    isPending: isLoading,
-    error,
-  } = useMutation({
+  const { mutate, isPending, error, reset } = useMutation({
     mutationFn: async (data: z.infer<typeof resetPasswordSchema>) => {
       const { error } = await authClient.resetPassword({
         newPassword: data.newPassword,
@@ -41,16 +38,24 @@ export const usePasswordReset = () => {
       toast.success('Password reset successfully');
       router.push('/sign-in');
     },
+    onError: err => {
+      toast.error(err?.message || 'Something went wrong. Please try again.');
+    },
   });
 
+  useEffect(() => {
+    const subscription = form.watch(() => reset());
+    return () => subscription.unsubscribe();
+  }, [form, reset]);
+
   const onSubmit = (data: z.infer<typeof resetPasswordSchema>) => {
-    resetPasswordMutation(data);
+    mutate(data);
   };
 
   return {
     form,
     onSubmit,
-    isLoading,
+    isLoading: isPending,
     error,
   };
 };

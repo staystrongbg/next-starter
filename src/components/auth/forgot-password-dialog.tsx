@@ -15,13 +15,12 @@ import { Input } from '@/components/ui/input';
 import { Controller } from 'react-hook-form';
 
 export const ForgotPasswordDialog = () => {
-  const { form, isLoading, error, onSubmit, open, setDialogOpen } =
-    useForgotPassword();
+  const { form, isLoading, error, onSubmit, open, setDialogOpen } = useForgotPassword();
 
   return (
     <Dialog
       open={open}
-      onOpenChange={(newOpen) => {
+      onOpenChange={newOpen => {
         if (!newOpen) {
           form.reset();
         }
@@ -41,7 +40,13 @@ export const ForgotPasswordDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {error && <FieldError className="text-red-500" errors={[error]} />}
+          {error && (
+            <FieldError
+              errors={[
+                error?.message ? error : { message: 'Something went wrong. Please try again.' },
+              ]}
+            />
+          )}
           <FieldGroup>
             <Controller
               name="email"
@@ -55,9 +60,7 @@ export const ForgotPasswordDialog = () => {
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter your email"
                   />
-                  {fieldState.invalid && (
-                    <FieldError className="text-red-500" errors={[fieldState.error]} />
-                  )}
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />

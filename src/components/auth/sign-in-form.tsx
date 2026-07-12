@@ -22,7 +22,13 @@ export const SignInForm = () => {
     <>
       <form id="sign-in-form" onSubmit={onSubmit}>
         <FieldGroup>
-          {error && <FieldError className="text-red-500" errors={[error]} />}
+          {error && (
+            <FieldError
+              errors={[
+                error?.message ? error : { message: 'Something went wrong. Please try again.' },
+              ]}
+            />
+          )}
 
           <Controller
             name="email"
@@ -36,9 +42,7 @@ export const SignInForm = () => {
                   aria-invalid={fieldState.invalid}
                   placeholder="Enter your email"
                 />
-                {fieldState.invalid && (
-                  <FieldError className="text-red-500" errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
           />
@@ -51,8 +55,7 @@ export const SignInForm = () => {
                 <div className="flex items-baseline justify-between">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                   <p className="text-xs">
-                    Forgot Password?{' '}
-                    <ForgotPasswordDialog />
+                    Forgot Password? <ForgotPasswordDialog />
                   </p>
                 </div>
 
@@ -71,9 +74,7 @@ export const SignInForm = () => {
                   />
                 </div>
 
-                {fieldState.invalid && (
-                  <FieldError className="text-red-500" errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
           />
