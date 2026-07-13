@@ -3,21 +3,20 @@
 import { useState } from 'react';
 
 export const usePasswordVisibility = () => {
-  const [visibility, setVisibility] = useState({
+  const [field, setField] = useState({
     password: false,
     newPassword: false,
     confirmPassword: false,
   });
 
-  const toggle = (field: keyof typeof visibility) =>
-    setVisibility((prev) => ({ ...prev, [field]: !prev[field] }));
+  const toggle = (key: keyof typeof field) => setField(prev => ({ ...prev, [key]: !prev[key] }));
 
   return {
-    isPasswordVisible: visibility.password,
+    isPasswordVisible: field.password,
     togglePasswordVisibility: () => toggle('password'),
-    isNewPasswordVisible: visibility.newPassword,
+    isNewPasswordVisible: field.newPassword,
     toggleNewPasswordVisibility: () => toggle('newPassword'),
-    isConfirmPasswordVisible: visibility.confirmPassword,
+    isConfirmPasswordVisible: field.confirmPassword,
     toggleConfirmPasswordVisibility: () => toggle('confirmPassword'),
   };
 };

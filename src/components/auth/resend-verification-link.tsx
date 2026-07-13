@@ -3,30 +3,14 @@
 import { useResendVerificationEmail } from '@/app/hooks/use-resend-verification-email';
 import { authClient } from '@/lib/auth-client';
 import { CheckCircle } from 'lucide-react';
-import { unauthorized } from 'next/navigation';
 
 import { SubmitButton } from '../shared/submit-button';
-import { Skeleton } from '../ui/skeleton';
 
 export default function ResendVerificationLink() {
-  const session = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const { mutate: resendVerification, isPending: isLoading, error } = useResendVerificationEmail();
 
-  if (session.isPending) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4">
-        <Skeleton className="h-10 w-10 rounded-full bg-gray-200" />
-        <Skeleton className="h-10 w-42 bg-gray-200" />
-        <Skeleton className="h-10 w-36 bg-gray-200" />
-      </div>
-    );
-  }
-
-  if (!session.data) {
-    return unauthorized();
-  }
-
-  const isVerified = session.data.user.emailVerified;
+  const isVerified = session?.user?.emailVerified;
 
   const errorMessage =
     error instanceof Error ? error.message : typeof error === 'string' ? error : undefined;

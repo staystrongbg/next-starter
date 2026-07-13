@@ -12,7 +12,7 @@ interface SubmitButtonProps extends Omit<React.ComponentProps<typeof Button>, 'c
 export const SubmitButton = ({ isLoading, label, loadingLabel, ...props }: SubmitButtonProps) => {
   return (
     <Button
-      type="submit"
+      type={props.type || 'submit'}
       disabled={isLoading}
       className={cn('flex items-center gap-2', props.className)}
       {...props}
