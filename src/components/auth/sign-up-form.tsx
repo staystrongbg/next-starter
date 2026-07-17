@@ -3,7 +3,7 @@
 import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
 import { useSignUp } from '@/app/hooks/use-signup';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 
 import { SubmitButton } from '../shared/submit-button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
@@ -21,9 +21,12 @@ export const SignUpForm = () => {
 
   const { form, onSubmit, isLoading, error } = useSignUp();
 
-  const newPasswordValue = form.watch('password');
+  const newPasswordValue = useWatch({
+    control: form.control,
+    name: 'password',
+    defaultValue: '',
+  });
   const strength = getPasswordStrength(newPasswordValue);
-
   return (
     <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>

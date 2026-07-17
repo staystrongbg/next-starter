@@ -1,10 +1,11 @@
 'use client';
 
-import { ChevronDownIcon, ImageIcon, Lock, Mail, UserCircle } from 'lucide-react';
+import { ChevronDownIcon, ImageIcon, Lock, Mail, TrashIcon, UserCircle } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
+import { DeleteAccount } from './delete-account';
 import UpdateEmailForm from './update-email-form';
 import UpdateImageForm from './update-image-form';
 import { UpdateNameForm } from './update-name-form';
@@ -15,6 +16,7 @@ const sections = [
   { id: 'email', label: 'Email Address', icon: Mail, component: UpdateEmailForm },
   { id: 'name', label: 'Display Name', icon: UserCircle, component: UpdateNameForm },
   { id: 'image', label: 'Profile Picture', icon: ImageIcon, component: UpdateImageForm },
+  { id: 'delete_account', label: 'Danger Zone', icon: TrashIcon, component: DeleteAccount },
 ];
 
 export const ChangeUserDetails = () => {

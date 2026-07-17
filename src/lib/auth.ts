@@ -57,6 +57,9 @@ export const auth = betterAuth({
       enabled: true,
       updateEmailWithoutVerification: true,
     },
+    deleteUser: {
+      enabled: true,
+    },
   },
   // TODO: Add production domain
   trustedOrigins: ['http://localhost:3000', baseUrl],
