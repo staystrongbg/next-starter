@@ -20,7 +20,7 @@ export function DeleteAccount() {
     },
     onError: error => {
       console.error('Delete account error:', error);
-      toast.error(error.message);
+      toast.error(error.message || 'Something went wrong. Please try again.');
     },
   });
 

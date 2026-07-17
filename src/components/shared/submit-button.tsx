@@ -22,10 +22,10 @@ export const SubmitButton = ({ isLoading, label, loadingLabel, ...props }: Submi
       {isLoading ? (
         <div className="flex items-center gap-2">
           <Loader2 className="animate-spin" />
-          <p>{loadingLabel}</p>
+          <span>{loadingLabel}</span>
         </div>
       ) : (
-        <p>{label}</p>
+        <span>{label}</span>
       )}
     </Button>
   );
