@@ -11,8 +11,7 @@ export const generateUserAvatar = ({ user }: GenerateUserAvatarProps) => {
       ?.split(' ')
       .map(name => name[0])
       .join('')
-      .toUpperCase() ||
-    user?.email?.split('@')[0]?.substring(0, 2).toUpperCase();
+      .toUpperCase() || user?.email?.split('@')[0]?.substring(0, 2).toUpperCase();
 
-  return userInitials || 'U';
+  return userInitials;
 };
