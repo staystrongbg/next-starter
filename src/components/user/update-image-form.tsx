@@ -108,7 +108,7 @@ export default function UpdateImageForm() {
                       alt="user-avatar"
                       className="object-cover"
                     />
-                    <AvatarFallback>{generateUserAvatar({ user })}</AvatarFallback>
+                    <AvatarFallback>{generateUserAvatar({ user }) || 'U'}</AvatarFallback>
                   </Avatar>
                 </FieldLabel>
               </span>

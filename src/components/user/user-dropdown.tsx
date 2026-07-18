@@ -47,7 +47,7 @@ export const UserDropdown = () => {
             className="object-cover"
           />
           <AvatarFallback>
-            {generateUserAvatar({ user: { name: user.name, email: user.email } })}
+            {generateUserAvatar({ user: { name: user.name, email: user.email } }) || 'U'}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

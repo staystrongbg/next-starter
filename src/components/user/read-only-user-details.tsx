@@ -20,7 +20,7 @@ export const ReadOnlyUserDetails = () => {
           className="object-cover"
         />
         <AvatarFallback className="text-lg">
-          {generateUserAvatar({ user: data?.user })}
+          {generateUserAvatar({ user: data?.user }) || 'U'}
         </AvatarFallback>
       </Avatar>
 
