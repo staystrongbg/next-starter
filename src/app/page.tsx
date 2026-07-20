@@ -68,7 +68,6 @@ const fileTree: FileTreeItem[] = [
   { name: 'helpers/', type: 'folder', indent: 1 },
   { name: 'generate-user-avatar.ts', type: 'file', indent: 2 },
   { name: 'get-pwd-strength.ts', type: 'file', indent: 2 },
-  { name: 'types/', type: 'folder', indent: 1 },
   { name: 'index.ts', type: 'file', indent: 2 },
   { name: 'prisma.ts', type: 'file', indent: 1 },
   { name: 'providers.tsx', type: 'file', indent: 1 },
@@ -109,17 +108,17 @@ const notifications: Notification[] = [
   { text: 'Modify `schema.prisma` file and run `db:push`' },
 ];
 
-function renderInlineCode(text: string): React.ReactNode {
-  const parts = text.split(/(`[^`]+`)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith('`') && part.endsWith('`')) {
+function RenderInlineCode({ text }: { text: string }): React.ReactNode {
+  const codeSegments = text.split(/(`[^`]+`)/g);
+  return codeSegments.map((segment, i) => {
+    if (segment.startsWith('`') && segment.endsWith('`')) {
       return (
         <code key={i} className="rounded bg-gray-200 px-1 py-0.5 text-sm dark:bg-gray-800">
-          {part.slice(1, -1)}
+          {segment.slice(1, -1)}
         </code>
       );
     }
-    return part;
+    return segment;
   });
 }
 
@@ -128,7 +127,9 @@ export default function Home() {
     <div className="mx-auto flex max-w-5xl flex-col items-center gap-16 px-4 py-12">
       <div className="flex flex-col items-center gap-6 text-center">
         {notifications.map((notification, index) => (
-          <NotificationBoard key={index}>{renderInlineCode(notification.text)}</NotificationBoard>
+          <NotificationBoard key={index}>
+            <RenderInlineCode text={notification.text} />
+          </NotificationBoard>
         ))}
         <div className="flex items-center gap-2 text-sm font-medium">
           <Rocket className="h-4 w-4 text-orange-600" />
