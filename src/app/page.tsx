@@ -97,15 +97,11 @@ interface Notification {
   type?: 'info' | 'warning' | 'error';
 }
 
-const notifications: Notification[] = [
-  {
-    text: 'Note that experimental Nextjs `AuthInterups` feature is enabled for handling unauthorized redirections',
-  },
-  { text: '`.env.example` is a good place to start' },
-  {
-    text: 'To use Github or any social authentication, set up the corresponding environment variables and enable the providers in the `auth.ts`',
-  },
-  { text: 'Modify `schema.prisma` file and run `db:push`' },
+const notifications = [
+  'Note that experimental Nextjs `AuthInterups` feature is enabled for handling unauthorized redirections',
+  '`.env.example` is a good place to start',
+  'To use Github or any social authentication, set up the corresponding environment variables and enable the providers in the `auth.ts`',
+  'Modify `schema.prisma` file and run `db:push`',
 ];
 
 function RenderInlineCode({ text }: { text: string }): React.ReactNode {
@@ -128,7 +124,7 @@ export default function Home() {
       <div className="flex flex-col items-center gap-6 text-center">
         {notifications.map((notification, index) => (
           <NotificationBoard key={index}>
-            <RenderInlineCode text={notification.text} />
+            <RenderInlineCode text={notification} />
           </NotificationBoard>
         ))}
         <div className="flex items-center gap-2 text-sm font-medium">

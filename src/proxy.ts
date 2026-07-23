@@ -1,5 +1,6 @@
-import { auth } from '@/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
+
+import { requireUserSession } from './lib/require-user-session';
 
 const protectedRoutes = ['/profile'];
 const authRoutes = ['/sign-in', '/sign-up', '/reset-password'];
@@ -15,11 +16,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL('/sign-in', request.url));
       }
     }
-
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    });
-
+    const session = await requireUserSession();
     const isAuthenticated = !!session?.user;
     const { pathname } = request.nextUrl;
 
