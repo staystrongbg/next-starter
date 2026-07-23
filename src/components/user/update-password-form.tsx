@@ -1,9 +1,9 @@
 'use client';
 
-import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
+import { usePasswordVisibility } from '@/hooks/use-password-visibility';
 import { authClient } from '@/lib/auth-client';
 import { updatePasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';

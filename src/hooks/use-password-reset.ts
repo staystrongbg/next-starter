@@ -1,6 +1,5 @@
 'use client';
 
-import { useToken } from '@/app/hooks/use-token';
 import { authClient } from '@/lib/auth-client';
 import { resetPasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +9,8 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+
+import { useToken } from './use-token';
 
 export const usePasswordReset = () => {
   const token = useToken();

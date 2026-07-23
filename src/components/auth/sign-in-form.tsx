@@ -1,7 +1,7 @@
 'use client';
 
-import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
-import { useSignIn } from '@/app/hooks/use-signin';
+import { usePasswordVisibility } from '@/hooks/use-password-visibility';
+import { useSignIn } from '@/hooks/use-signin';
 import { authClient } from '@/lib/auth-client';
 import { Controller } from 'react-hook-form';
 

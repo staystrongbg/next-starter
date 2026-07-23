@@ -1,6 +1,6 @@
 'use client';
 
-import { useResendVerificationEmail } from '@/app/hooks/use-resend-verification-email';
+import { useResendVerificationEmail } from '@/hooks/use-resend-verification-email';
 import { authClient } from '@/lib/auth-client';
 import { CheckCircle } from 'lucide-react';
 

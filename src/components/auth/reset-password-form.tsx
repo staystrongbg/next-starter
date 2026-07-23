@@ -1,13 +1,13 @@
 'use client';
 
-import { usePasswordReset } from '@/app/hooks/use-password-reset';
-import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
 import { PasswordStrengthMeter } from '@/components/auth/password-strength-meter';
 import { TogglePasswordVisibility } from '@/components/auth/toggle-password-visibility';
 import { SubmitButton } from '@/components/shared/submit-button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
+import { usePasswordReset } from '@/hooks/use-password-reset';
+import { usePasswordVisibility } from '@/hooks/use-password-visibility';
 import { MIN_PASSWORD_STRENGTH_SCORE } from '@/lib/constants';
 import { Controller } from 'react-hook-form';
 

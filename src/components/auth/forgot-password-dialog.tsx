@@ -1,6 +1,5 @@
 'use client';
 
-import { useForgotPassword } from '@/app/hooks/use-forgot-password';
 import { SubmitButton } from '@/components/shared/submit-button';
 import {
   Dialog,
@@ -12,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { useForgotPassword } from '@/hooks/use-forgot-password';
 import { Controller } from 'react-hook-form';
 
 export const ForgotPasswordDialog = () => {

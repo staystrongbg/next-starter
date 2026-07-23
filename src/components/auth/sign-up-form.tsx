@@ -1,8 +1,8 @@
 'use client';
 
-import { usePasswordVisibility } from '@/app/hooks/use-password-visibility';
-import { useSignUp } from '@/app/hooks/use-signup';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
+import { usePasswordVisibility } from '@/hooks/use-password-visibility';
+import { useSignUp } from '@/hooks/use-signup';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { SubmitButton } from '../shared/submit-button';
