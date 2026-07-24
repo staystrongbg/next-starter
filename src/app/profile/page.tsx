@@ -17,16 +17,7 @@ export default function ProfilePage() {
           <p className="mt-1 text-sm text-gray-500">Manage your account settings and preferences</p>
         </div>
         <div className="p-6">
-          <Suspense
-            fallback={
-              <div className="flex flex-col items-center justify-center gap-8">
-                <Skeleton className="h-20 w-20 rounded-full" />
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-4 w-full" />
-              </div>
-            }
-          >
+          <Suspense fallback={<ProfilePageSkeleton />}>
             <UserDetails />
           </Suspense>
         </div>
@@ -34,3 +25,14 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+const ProfilePageSkeleton = () => {
+  return (
+    <div className="flex flex-col items-center justify-center gap-8">
+      <Skeleton className="h-20 w-20 rounded-full" />
+      <Skeleton className="h-4 w-32" />
+      <Skeleton className="h-4 w-20" />
+      <Skeleton className="h-4 w-full" />
+    </div>
+  );
+};
