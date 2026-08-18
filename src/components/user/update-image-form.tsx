@@ -1,14 +1,15 @@
 'use client';
 
-import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Button } from '@/components/ui/button';
+import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { generateUserAvatar } from '@/helpers/generate-user-avatar';
 import { authClient } from '@/lib/auth-client';
 import { updateImageSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { Loader2 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { ImagePlus, Loader2, Trash2 } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -28,13 +29,18 @@ export default function UpdateImageForm() {
     },
   });
 
-  //ensure form reflects session update
-  useEffect(() => {
-    if (session.data?.user?.image) {
-      form.reset({ image: null });
-      setPreviewUrl(null);
+  const hasImage = Boolean(session.data?.user?.image);
+
+  const clearPreview = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
     }
-  }, [session.data?.user?.image, form]);
+    setPreviewUrl(null);
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+    form.setValue('image', null, { shouldValidate: true });
+  };
 
   const {
     mutate: updateImageMutation,
@@ -63,13 +69,30 @@ export default function UpdateImageForm() {
       }
     },
     onSuccess: () => {
-      toast.success('Image updated successfully');
+      toast.success(hasImage ? 'Image updated successfully' : 'Image added successfully');
       session.refetch();
+      clearPreview();
       form.reset({ image: null });
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-        setPreviewUrl(null);
+    },
+  });
+
+  const { mutate: removeImageMutation, isPending: isRemoving } = useMutation({
+    mutationFn: async () => {
+      const { error } = await authClient.updateUser({
+        image: null,
+      });
+      if (error) {
+        throw error;
       }
+    },
+    onSuccess: () => {
+      toast.success('Image removed');
+      session.refetch();
+      clearPreview();
+      form.reset({ image: null });
+    },
+    onError: err => {
+      toast.error(err?.message || 'Something went wrong. Please try again.');
     },
   });
 
@@ -100,50 +123,68 @@ export default function UpdateImageForm() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <span className="flex items-center gap-4">
-                <FieldLabel htmlFor={field.name}>
-                  Image
-                  <Avatar>
-                    <AvatarImage
-                      src={previewUrl || user.image || undefined}
-                      alt="user-avatar"
-                      className="object-cover"
-                    />
-                    <AvatarFallback>{generateUserAvatar({ user }) || 'U'}</AvatarFallback>
-                  </Avatar>
-                </FieldLabel>
-              </span>
-              <Input
-                ref={inputRef}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder={field.name}
-                type="file"
-                accept="image/*"
-                onChange={e => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const url = URL.createObjectURL(file);
-                    if (previewUrl) {
-                      URL.revokeObjectURL(previewUrl);
+                <Avatar className="size-16">
+                  <AvatarImage
+                    src={previewUrl || user.image || undefined}
+                    alt="user-avatar"
+                    className="object-cover"
+                  />
+                  <AvatarFallback>{generateUserAvatar({ user }) || 'U'}</AvatarFallback>
+                </Avatar>
+
+                <span className="flex flex-col gap-2">
+                  <Button type="button" variant="outline" onClick={() => inputRef.current?.click()}>
+                    <ImagePlus />
+                    {hasImage ? 'Change Image' : 'Add Image'}
+                  </Button>
+
+                  {hasImage && (
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      onClick={() => removeImageMutation()}
+                      disabled={isRemoving}
+                    >
+                      {isRemoving ? <Loader2 className="animate-spin" /> : <Trash2 />}
+                      Remove Image
+                    </Button>
+                  )}
+                </span>
+
+                <Input
+                  ref={inputRef}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  type="file"
+                  accept="image/*"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      if (previewUrl) {
+                        URL.revokeObjectURL(previewUrl);
+                      }
+                      setPreviewUrl(url);
                     }
-                    setPreviewUrl(url);
-                  }
-                  field.onChange(file || null);
-                }}
-                hidden
-              />
+                    field.onChange(file || null);
+                  }}
+                  hidden
+                />
+              </span>
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
 
-        <SubmitButton
-          label="Update Image"
-          loadingLabel="Updating..."
-          isLoading={isLoading}
-          disabled={isLoading || !form.formState.isValid}
-        />
+        {previewUrl && (
+          <SubmitButton
+            label={hasImage ? 'Update Image' : 'Upload Image'}
+            loadingLabel="Uploading..."
+            isLoading={isLoading}
+            disabled={!form.formState.isValid}
+          />
+        )}
       </FieldGroup>
     </form>
   );

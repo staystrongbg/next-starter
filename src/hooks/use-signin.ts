@@ -14,7 +14,7 @@ import { useRedirect } from './use-redirect';
 
 export const useSignIn = () => {
   const router = useRouter();
-  const { redirect } = useRedirect();
+  const redirect = useRedirect();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),

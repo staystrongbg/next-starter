@@ -6,7 +6,5 @@ export const useRedirect = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect');
 
-  return {
-    redirect,
-  };
+  return redirect;
 };
