@@ -5,11 +5,11 @@ import { resetPasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { useClearServerError } from './use-clear-server-error';
 import { useToken } from './use-token';
 
 export const usePasswordReset = () => {
@@ -44,10 +44,7 @@ export const usePasswordReset = () => {
     },
   });
 
-  useEffect(() => {
-    const subscription = form.watch(() => reset());
-    return () => subscription.unsubscribe();
-  }, [form, reset]);
+  useClearServerError(form, reset, error);
 
   const onSubmit = (data: z.infer<typeof resetPasswordSchema>) => {
     mutate(data);

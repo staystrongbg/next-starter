@@ -1,10 +1,20 @@
 'use client';
 
 import { useEffect } from 'react';
+import type { FieldValues, UseFormReturn } from 'react-hook-form';
 
-export const useClearServerError = (form: any, reset: () => void) => {
+export const useClearServerError = <T extends FieldValues>(
+  form: UseFormReturn<T>,
+  reset: () => void,
+  error?: Error | null,
+) => {
   useEffect(() => {
-    const subscription = form.watch(() => reset());
+    const subscription = form.watch(() => {
+      // Clear server error when user starts typing
+      if (error) {
+        reset();
+      }
+    });
     return () => subscription.unsubscribe();
-  }, [form, reset]);
+  }, [form, reset, error]);
 };

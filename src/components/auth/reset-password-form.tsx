@@ -9,13 +9,18 @@ import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { usePasswordReset } from '@/hooks/use-password-reset';
 import { usePasswordVisibility } from '@/hooks/use-password-visibility';
 import { MIN_PASSWORD_STRENGTH_SCORE } from '@/lib/constants';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 
 export const ResetPasswordForm = () => {
-  const { isPasswordVisible, togglePasswordVisibility } = usePasswordVisibility();
+  const { isNewPasswordVisible, toggleNewPasswordVisibility } = usePasswordVisibility();
   const { form, onSubmit, isLoading, error } = usePasswordReset();
 
-  const newPasswordValue = form.watch('newPassword');
+  const newPasswordValue = useWatch({
+    control: form.control,
+    name: 'newPassword',
+    defaultValue: '',
+  });
+
   const strength = getPasswordStrength(newPasswordValue);
 
   return (
@@ -40,12 +45,12 @@ export const ResetPasswordForm = () => {
                   aria-invalid={fieldState.invalid}
                   placeholder="New Password"
                   autoComplete="new-password"
-                  type={isPasswordVisible ? 'text' : 'password'}
+                  type={isNewPasswordVisible ? 'text' : 'password'}
                 />
 
                 <TogglePasswordVisibility
-                  isVisible={isPasswordVisible}
-                  onClick={togglePasswordVisibility}
+                  isVisible={isNewPasswordVisible}
+                  onClick={toggleNewPasswordVisibility}
                 />
               </div>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

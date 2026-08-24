@@ -4,12 +4,13 @@ import { authClient } from '@/lib/auth-client';
 import { signInSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import type { Route } from 'next';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { useClearServerError } from './use-clear-server-error';
 import { useRedirect } from './use-redirect';
 
 export const useSignIn = () => {
@@ -36,18 +37,15 @@ export const useSignIn = () => {
     },
     onSuccess: () => {
       form.reset();
-      router.push(redirect || '/');
+      router.push((redirect || '/') as Route);
     },
     onError: err => {
       toast.error(err?.message || 'Something went wrong. Please try again.');
     },
   });
 
-  useEffect(() => {
-    const subscription = form.watch(() => reset());
-    return () => subscription.unsubscribe();
-  }, [form, reset]);
-
+  useClearServerError(form, reset, error);
+  //TODO: implement attempt limit
   const onSubmit = form.handleSubmit(data => mutate(data));
 
   return {

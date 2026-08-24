@@ -1,6 +1,7 @@
 'use client';
 
 import { LINKS } from '@/lib/constants';
+import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -12,7 +13,7 @@ export const Navigation = () => {
       {LINKS.map(item => {
         const isActive = item.href === pathname;
         return (
-          <Link key={item.label} href={item.href} className={isActive ? 'text-violet-700' : ''}>
+          <Link key={item.label} href={item.href as Route} className={isActive ? 'text-violet-700' : ''}>
             {item.label}
           </Link>
         );

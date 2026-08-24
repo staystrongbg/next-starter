@@ -1,4 +1,6 @@
-const LINKS = [{ href: '/', label: 'Home' }];
+import type { Route } from 'next';
+
+const LINKS: { href: Route; label: string }[] = [{ href: '/', label: 'Home' }];
 const MAX_PASSWORD_STRENGTH = 5;
 const MIN_PASSWORD_STRENGTH_SCORE = 2;
 

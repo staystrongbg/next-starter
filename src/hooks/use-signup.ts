@@ -5,10 +5,11 @@ import { signupSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+
+import { useClearServerError } from './use-clear-server-error';
 
 export const useSignUp = () => {
   const router = useRouter();
@@ -43,10 +44,7 @@ export const useSignUp = () => {
     },
   });
 
-  useEffect(() => {
-    const subscription = form.watch(() => reset());
-    return () => subscription.unsubscribe();
-  }, [form, reset]);
+  useClearServerError(form, reset, error);
 
   const onSubmit = (data: z.infer<typeof signupSchema>) => mutate(data);
 

@@ -3,6 +3,7 @@
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { usePasswordVisibility } from '@/hooks/use-password-visibility';
 import { useSignUp } from '@/hooks/use-signup';
+import { useMemo } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { SubmitButton } from '../shared/submit-button';
@@ -26,7 +27,8 @@ export const SignUpForm = () => {
     name: 'password',
     defaultValue: '',
   });
-  const strength = getPasswordStrength(newPasswordValue);
+
+  const strength = useMemo(() => getPasswordStrength(newPasswordValue), [newPasswordValue]);
   return (
     <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
