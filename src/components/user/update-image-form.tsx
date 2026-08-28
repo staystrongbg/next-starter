@@ -5,11 +5,12 @@ import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { generateUserAvatar } from '@/helpers/generate-user-avatar';
 import { authClient } from '@/lib/auth-client';
+import { uploadImage, validateImageFile } from '@/lib/upload';
 import { updateImageSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { ImagePlus, Loader2, Trash2 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -30,6 +31,15 @@ export default function UpdateImageForm() {
   });
 
   const hasImage = Boolean(session.data?.user?.image);
+
+  // Revoke preview URL on unmount or when previewUrl changes to avoid memory leaks
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const clearPreview = () => {
     if (previewUrl) {
@@ -52,13 +62,16 @@ export default function UpdateImageForm() {
       const file = data.image ?? undefined;
 
       if (file) {
-        const base64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-        imageUrl = base64;
+        // Client validation: size max 2MB and mime image/*
+        const validationError = validateImageFile(file);
+        if (validationError) {
+          throw new Error(validationError);
+        }
+
+        // NOTE: User.image should store a URL (Vercel Blob / S3), not base64.
+        // uploadImage abstracts storage; currently falls back to base64 for dev.
+        // See src/lib/upload.ts — swap to blob/S3 in production to avoid DB bloat.
+        imageUrl = await uploadImage(file);
       }
 
       const { error } = await authClient.updateUser({
@@ -73,6 +86,10 @@ export default function UpdateImageForm() {
       session.refetch();
       clearPreview();
       form.reset({ image: null });
+    },
+    onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : 'Failed to upload image';
+      toast.error(message);
     },
   });
 
@@ -92,7 +109,7 @@ export default function UpdateImageForm() {
       form.reset({ image: null });
     },
     onError: err => {
-      toast.error(err?.message || 'Something went wrong. Please try again.');
+      toast.error((err as Error)?.message || 'Something went wrong. Please try again.');
     },
   });
 
@@ -102,20 +119,30 @@ export default function UpdateImageForm() {
 
   if (session.isPending) {
     return (
-      <div className="flex h-16 items-center justify-center">
-        <Loader2 className="animate-spin" />
+      <div className="flex h-16 items-center justify-center" aria-live="polite" aria-busy="true">
+        <Loader2 className="animate-spin" aria-hidden="true" />
+        <span className="sr-only">Loading</span>
       </div>
     );
   }
 
   if (!session.data) {
-    return null;
+    return (
+      <div className="text-muted-foreground py-4 text-center text-sm" role="status">
+        No user session found. Please sign in.
+      </div>
+    );
   }
 
   const user = session.data.user;
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      {error && <FieldError errors={[error]} />}
+    <form onSubmit={form.handleSubmit(onSubmit)} aria-busy={isLoading} noValidate>
+      {!!error && (
+        <FieldError
+          errors={[{ message: (error as Error)?.message || 'Something went wrong' }]}
+          role="alert"
+        />
+      )}
       <FieldGroup>
         <Controller
           name="image"
@@ -134,7 +161,7 @@ export default function UpdateImageForm() {
 
                 <span className="flex flex-col gap-2">
                   <Button type="button" variant="outline" onClick={() => inputRef.current?.click()}>
-                    <ImagePlus />
+                    <ImagePlus aria-hidden="true" />
                     {hasImage ? 'Change Image' : 'Add Image'}
                   </Button>
 
@@ -144,8 +171,13 @@ export default function UpdateImageForm() {
                       variant="destructive"
                       onClick={() => removeImageMutation()}
                       disabled={isRemoving}
+                      aria-busy={isRemoving}
                     >
-                      {isRemoving ? <Loader2 className="animate-spin" /> : <Trash2 />}
+                      {isRemoving ? (
+                        <Loader2 className="animate-spin" aria-hidden="true" />
+                      ) : (
+                        <Trash2 aria-hidden="true" />
+                      )}
                       Remove Image
                     </Button>
                   )}
@@ -155,24 +187,41 @@ export default function UpdateImageForm() {
                   ref={inputRef}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
+                  aria-describedby={fieldState.error ? `${field.name}-error` : undefined}
                   type="file"
                   accept="image/*"
                   onChange={e => {
-                    const file = e.target.files?.[0];
+                    const file = e.target.files?.[0] ?? null;
+
+                    // Client validation: size max 2MB and mime image/*
                     if (file) {
+                      const validationError = validateImageFile(file);
+                      if (validationError) {
+                        toast.error(validationError);
+                        form.setError('image', { type: 'manual', message: validationError });
+                        // clear input
+                        e.target.value = '';
+                        return;
+                      }
+                      form.clearErrors('image');
                       const url = URL.createObjectURL(file);
                       if (previewUrl) {
                         URL.revokeObjectURL(previewUrl);
                       }
                       setPreviewUrl(url);
+                    } else {
+                      if (previewUrl) URL.revokeObjectURL(previewUrl);
+                      setPreviewUrl(null);
                     }
-                    field.onChange(file || null);
+                    field.onChange(file);
                   }}
                   hidden
                 />
               </span>
 
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} id={`${field.name}-error`} />
+              )}
             </Field>
           )}
         />
@@ -182,7 +231,7 @@ export default function UpdateImageForm() {
             label={hasImage ? 'Update Image' : 'Upload Image'}
             loadingLabel="Uploading..."
             isLoading={isLoading}
-            disabled={!form.formState.isValid}
+            disabled={!form.formState.isValid || isLoading}
           />
         )}
       </FieldGroup>

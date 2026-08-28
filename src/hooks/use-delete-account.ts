@@ -8,7 +8,8 @@ export function useDeleteAccount() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      await authClient.deleteUser();
+      const { error } = await authClient.deleteUser();
+      if (error) throw error;
     },
     onSuccess: () => {
       toast.success('Account deleted successfully');
@@ -16,15 +17,13 @@ export function useDeleteAccount() {
     },
     onError: error => {
       console.error('Delete account error:', error);
-      toast.error(error.message || 'Something went wrong. Please try again.');
+      toast.error((error as Error).message || 'Something went wrong. Please try again.');
     },
   });
 
-  const confirmDelete = () => {
-    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      mutate();
-    }
-  };
+  // Dialog-based confirmation is handled in DeleteAccount component.
+  // Keeping confirmDelete as deprecated alias for backwards compat.
+  const confirmDelete = () => mutate();
 
   return {
     deleteUser: mutate,

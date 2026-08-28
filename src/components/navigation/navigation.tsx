@@ -1,6 +1,6 @@
 'use client';
 
-import { LINKS } from '@/lib/constants';
+import { LINKS } from '@/lib/client-constants';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

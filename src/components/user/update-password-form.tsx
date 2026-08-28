@@ -5,11 +5,13 @@ import { Input } from '@/components/ui/input';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { usePasswordVisibility } from '@/hooks/use-password-visibility';
 import { authClient } from '@/lib/auth-client';
+import { MIN_PASSWORD_STRENGTH_SCORE } from '@/lib/client-constants';
 import { updatePasswordSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 import { useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -36,7 +38,7 @@ export default function UpdatePasswordForm() {
     },
   });
 
-  const newPasswordValue = form.watch('newPassword');
+  const newPasswordValue = useWatch({ control: form.control, name: 'newPassword', defaultValue: '' });
 
   const strength = useMemo(() => getPasswordStrength(newPasswordValue), [newPasswordValue]);
 
@@ -63,15 +65,40 @@ export default function UpdatePasswordForm() {
       toast.success('Password updated successfully');
       session.refetch();
     },
+    onError: (err: unknown) => {
+      toast.error((err as Error)?.message || 'Failed to update password');
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof updatePasswordSchema>) => {
     changePasswordMutation(data);
   };
 
+  if (session.isPending) {
+    return (
+      <div className="flex h-16 items-center justify-center" aria-live="polite" aria-busy="true">
+        <Loader2 className="animate-spin" aria-hidden="true" />
+        <span className="sr-only">Loading</span>
+      </div>
+    );
+  }
+
+  if (!session.data) {
+    return (
+      <div className="text-muted-foreground py-4 text-center text-sm" role="status">
+        No user session found. Please sign in.
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      {error && <FieldError className="text-red-500" errors={[error]} />}
+    <form onSubmit={form.handleSubmit(onSubmit)} aria-busy={isLoading} noValidate>
+      {!!error && (
+        <FieldError
+          errors={[{ message: (error as Error)?.message || 'Something went wrong' }]}
+          role="alert"
+        />
+      )}
 
       <FieldGroup>
         <Controller
@@ -85,16 +112,20 @@ export default function UpdatePasswordForm() {
                   {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
+                  aria-describedby={fieldState.error ? `${field.name}-error` : undefined}
                   placeholder="Current Password"
                   autoComplete="current-password"
                   type={isPasswordVisible ? 'text' : 'password'}
+                  className="focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2"
                 />
                 <TogglePasswordVisibility
                   isVisible={isPasswordVisible}
                   onClick={togglePasswordVisibility}
                 />
               </div>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} id={`${field.name}-error`} role="alert" />
+              )}
             </Field>
           )}
         />
@@ -109,9 +140,13 @@ export default function UpdatePasswordForm() {
                   {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
+                  aria-describedby={
+                    fieldState.error ? `${field.name}-error` : `${field.name}-strength`
+                  }
                   placeholder="New Password"
                   autoComplete="new-password"
                   type={isNewPasswordVisible ? 'text' : 'password'}
+                  className="focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2"
                 />
 
                 <TogglePasswordVisibility
@@ -119,10 +154,19 @@ export default function UpdatePasswordForm() {
                   onClick={toggleNewPasswordVisibility}
                 />
               </div>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} id={`${field.name}-error`} role="alert" />
+              )}
 
-              {/* Password strength meter */}
-              {newPasswordValue && <PasswordStrengthMeter strength={strength} />}
+              {/* Password strength meter - always visible for consistent UX */}
+              <div id={`${field.name}-strength`}>
+                <PasswordStrengthMeter strength={strength} />
+              </div>
+              {newPasswordValue && strength.score < MIN_PASSWORD_STRENGTH_SCORE && (
+                <p className="text-destructive text-xs" role="alert">
+                  Password too weak — add mixed case, numbers or symbols.
+                </p>
+              )}
             </Field>
           )}
         />
@@ -131,7 +175,10 @@ export default function UpdatePasswordForm() {
           label="Update Password"
           loadingLabel="Updating Password..."
           disabled={
-            isLoading || !form.formState.isValid || !form.formState.isDirty || strength.score < 2
+            isLoading ||
+            !form.formState.isValid ||
+            !form.formState.isDirty ||
+            strength.score < MIN_PASSWORD_STRENGTH_SCORE
           }
         />
       </FieldGroup>

@@ -14,15 +14,24 @@ import { TogglePasswordVisibility } from './toggle-password-visibility';
 
 export const SignInForm = () => {
   const { isPasswordVisible, togglePasswordVisibility } = usePasswordVisibility();
-  const { form, onSubmit, isLoading, error } = useSignIn();
+  const { form, onSubmit, isLoading, error, isLocked, remainingMinSec } = useSignIn();
 
   const isSocialSignInEnabled = false; //remove when social sign in is implemented
 
   return (
     <>
-      <form id="sign-in-form" onSubmit={onSubmit}>
+      <form id="sign-in-form" onSubmit={onSubmit} aria-busy={isLoading}>
         <FieldGroup>
-          {error && (
+          {isLocked && (
+            <div
+              role="alert"
+              className="bg-destructive/10 text-destructive rounded-md border p-3 text-sm"
+              aria-live="assertive"
+            >
+              Too many failed attempts. Please try again in {remainingMinSec}.
+            </div>
+          )}
+          {error && !isLocked && (
             <FieldError
               errors={[
                 error?.message ? error : { message: 'Something went wrong. Please try again.' },
@@ -80,10 +89,10 @@ export const SignInForm = () => {
           />
           <SubmitButton
             variant={'outline'}
-            label="Sign In"
+            label={isLocked ? `Locked (${remainingMinSec})` : 'Sign In'}
             loadingLabel="Signing in..."
             isLoading={isLoading}
-            disabled={isLoading}
+            disabled={isLoading || isLocked}
           />
         </FieldGroup>
       </form>

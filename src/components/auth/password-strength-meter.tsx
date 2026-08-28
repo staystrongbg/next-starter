@@ -1,5 +1,5 @@
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
-import { MAX_PASSWORD_STRENGTH } from '@/lib/constants';
+import { MAX_PASSWORD_STRENGTH } from '@/lib/client-constants';
 
 interface PasswordStrengthMeterProps {
   strength: ReturnType<typeof getPasswordStrength>;

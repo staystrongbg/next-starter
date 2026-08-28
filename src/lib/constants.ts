@@ -1,22 +1,38 @@
-import type { Route } from 'next';
+import 'server-only';
 
-const LINKS: { href: Route; label: string }[] = [{ href: '/', label: 'Home' }];
-const MAX_PASSWORD_STRENGTH = 5;
-const MIN_PASSWORD_STRENGTH_SCORE = 2;
+import {
+  baseUrl as validatedBaseUrl,
+  databaseUrl as validatedDatabaseUrl,
+  emailFrom as validatedEmailFrom,
+  environment as validatedEnvironment,
+  githubClientId as validatedGithubClientId,
+  githubClientSecret as validatedGithubClientSecret,
+  gmailServicePassword as validatedGmailServicePassword,
+  googleClientId as validatedGoogleClientId,
+  googleClientSecret as validatedGoogleClientSecret,
+  nodemailerEmail as validatedNodemailerEmail,
+} from './env';
 
-const emailFrom = process.env.EMAIL_FROM as string;
-const gmailServicePassword = process.env.NODEMAILER_PASSWORD as string;
+// Re-export client-safe constants from single source of truth (client-constants).
+// Keeping re-export here preserves compatibility for server imports that use `from './constants'`.
+export { LINKS, MAX_PASSWORD_STRENGTH, MIN_PASSWORD_STRENGTH_SCORE } from './client-constants';
 
-const githubClientId = process.env.GITHUB_CLIENT_ID as string;
-const githubClientSecret = process.env.GITHUB_CLIENT_SECRET as string;
+// Re-export validated env (single source of truth in src/lib/env.ts)
+// EMAIL_FROM = display From address; NODEMAILER_EMAIL = SMTP auth user (falls back to EMAIL_FROM)
+const emailFrom = validatedEmailFrom;
+const nodemailerEmail = validatedNodemailerEmail;
+const gmailServicePassword = validatedGmailServicePassword;
 
-const googleClientId = process.env.GOOGLE_CLIENT_ID as string;
-const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET as string;
+const githubClientId = validatedGithubClientId;
+const githubClientSecret = validatedGithubClientSecret;
 
-const environment = process.env.NODE_ENV as string;
-const baseUrl = process.env.BETTER_AUTH_URL as string;
+const googleClientId = validatedGoogleClientId;
+const googleClientSecret = validatedGoogleClientSecret;
 
-const databaseUrl = process.env.DATABASE_URL as string;
+const environment = validatedEnvironment;
+const baseUrl = validatedBaseUrl;
+
+const databaseUrl = validatedDatabaseUrl;
 export {
   baseUrl,
   databaseUrl,
@@ -27,7 +43,5 @@ export {
   gmailServicePassword,
   googleClientId,
   googleClientSecret,
-  LINKS,
-  MAX_PASSWORD_STRENGTH,
-  MIN_PASSWORD_STRENGTH_SCORE,
+  nodemailerEmail,
 };

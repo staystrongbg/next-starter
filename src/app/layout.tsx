@@ -20,8 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <Providers>
-        <body className="bg-background flex min-h-screen w-full flex-col">
+      <body className="bg-background flex min-h-screen w-full flex-col">
+        <Providers>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -35,8 +35,8 @@ export default function RootLayout({
               <Footer />
             </Suspense>
           </ThemeProvider>
-        </body>
-      </Providers>
+        </Providers>
+      </body>
     </html>
   );
 }

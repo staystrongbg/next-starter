@@ -102,11 +102,6 @@ interface Feature {
   title: string;
   description: string;
 }
-interface Notification {
-  text: string;
-  type?: 'info' | 'warning' | 'error';
-}
-
 const notifications = [
   'Note that experimental Nextjs `AuthInterups` feature is enabled for handling unauthorized redirections',
   '`.env.example` is a good place to start',

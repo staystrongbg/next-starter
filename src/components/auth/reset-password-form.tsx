@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { usePasswordReset } from '@/hooks/use-password-reset';
 import { usePasswordVisibility } from '@/hooks/use-password-visibility';
-import { MIN_PASSWORD_STRENGTH_SCORE } from '@/lib/constants';
+import { MIN_PASSWORD_STRENGTH_SCORE } from '@/lib/client-constants';
 import { Controller, useWatch } from 'react-hook-form';
 
 export const ResetPasswordForm = () => {

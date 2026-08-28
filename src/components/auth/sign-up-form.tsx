@@ -3,6 +3,7 @@
 import { getPasswordStrength } from '@/helpers/get-pwd-strength';
 import { usePasswordVisibility } from '@/hooks/use-password-visibility';
 import { useSignUp } from '@/hooks/use-signup';
+import { MIN_PASSWORD_STRENGTH_SCORE } from '@/lib/client-constants';
 import { useMemo } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
@@ -99,7 +100,12 @@ export const SignUpForm = () => {
               </Field>
             )}
           />
-          {newPasswordValue && <PasswordStrengthMeter strength={strength} />}
+          <PasswordStrengthMeter strength={strength} />
+          {newPasswordValue && strength.score < MIN_PASSWORD_STRENGTH_SCORE && (
+            <p className="text-destructive text-xs" role="alert">
+              Password too weak — use at least 8 chars with mixed case, numbers or symbols.
+            </p>
+          )}
         </div>
         <Controller
           name="confirmPassword"
@@ -130,7 +136,7 @@ export const SignUpForm = () => {
           label="Sign Up"
           loadingLabel="Signing up..."
           isLoading={isLoading}
-          disabled={isLoading}
+          disabled={isLoading || !form.formState.isValid || strength.score < MIN_PASSWORD_STRENGTH_SCORE}
         />
       </FieldGroup>
     </form>

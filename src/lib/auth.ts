@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 
@@ -9,6 +11,7 @@ import {
   googleClientId,
   googleClientSecret,
 } from './constants';
+import { betterAuthSecret } from './env';
 import { prisma } from './prisma';
 import { sendMail } from './send-email';
 
@@ -17,8 +20,10 @@ export const auth = betterAuth({
     provider: 'postgresql', // or "mysql", "postgresql", ...etc
   }),
   baseURL: baseUrl,
+  secret: betterAuthSecret,
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: false,
     async sendResetPassword({ user, url }) {
       await sendMail({
         email: emailFrom,
@@ -43,6 +48,7 @@ export const auth = betterAuth({
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
+    expiresIn: 3600, // 1 hour – aligns with Verification.expiresAt TTL
     async sendVerificationEmail({ url, user }) {
       await sendMail({
         email: emailFrom,
@@ -55,12 +61,12 @@ export const auth = betterAuth({
   user: {
     changeEmail: {
       enabled: true,
-      updateEmailWithoutVerification: true,
+      // Require verification before email is actually changed (was true – insecure)
+      updateEmailWithoutVerification: false,
     },
     deleteUser: {
       enabled: true,
     },
   },
-  // TODO: Add production domain
-  trustedOrigins: ['http://localhost:3000', baseUrl],
+  trustedOrigins: Array.from(new Set([baseUrl].filter(Boolean) as string[])),
 });

@@ -1,11 +1,9 @@
 // Helper function to get the auth client for client components
 import { createAuthClient } from 'better-auth/react';
 
-import { baseUrl } from './constants';
-
-const isProduction = process.env.NODE_ENV !== 'development';
-
 export const authClient = createAuthClient({
-  /** The base URL of the server (optional if you're using the same domain) */
-  baseURL: isProduction ? baseUrl : 'http://localhost:3000',
+  /** Base URL is optional when using same domain; using window.location.origin on client.
+   *  Avoid importing from server-only `src/lib/constants` / `src/lib/env` (would leak DATABASE_URL).
+   *  Better Auth will default to the current origin when baseURL is omitted.
+   */
 });

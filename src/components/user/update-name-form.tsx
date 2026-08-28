@@ -4,6 +4,7 @@ import { authClient } from '@/lib/auth-client';
 import { updateNameSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -42,17 +43,50 @@ export const UpdateNameForm = () => {
       }
     },
     onSuccess: () => {
-      form.reset();
       toast.success('Name updated successfully');
+      session.refetch();
+    },
+    onError: (err: unknown) => {
+      toast.error((err as Error)?.message || 'Failed to update name');
     },
   });
 
   const onSubmit = (data: z.infer<typeof updateNameSchema>) => {
     updateNameMutation(data);
   };
+
+  if (session.isPending) {
+    return (
+      <div className="flex h-16 items-center justify-center" aria-live="polite" aria-busy="true">
+        <Loader2 className="animate-spin" aria-hidden="true" />
+        <span className="sr-only">Loading</span>
+      </div>
+    );
+  }
+
+  if (!session.data) {
+    return (
+      <div className="text-muted-foreground py-4 text-center text-sm" role="status">
+        No user found. Please sign in again.
+      </div>
+    );
+  }
+
+  const hasName = Boolean(session.data.user.name);
+
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      {error && <FieldError errors={[error]} />}
+    <form onSubmit={form.handleSubmit(onSubmit)} aria-busy={isLoading} noValidate>
+      {!!error && (
+        <FieldError
+          errors={[{ message: (error as Error)?.message || 'Something went wrong' }]}
+          role="alert"
+        />
+      )}
+      {!hasName && (
+        <p className="text-muted-foreground mb-2 text-sm" role="status">
+          No display name set yet — add one below.
+        </p>
+      )}
       <FieldGroup>
         <Controller
           name="name"
@@ -64,10 +98,15 @@ export const UpdateNameForm = () => {
                 {...field}
                 id={field.name}
                 aria-invalid={fieldState.invalid}
-                placeholder={field.name}
+                aria-describedby={fieldState.error ? `${field.name}-error` : undefined}
+                placeholder="Enter display name"
                 type="text"
+                autoComplete="name"
+                className="focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2"
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} id={`${field.name}-error`} role="alert" />
+              )}
             </Field>
           )}
         />
@@ -76,7 +115,7 @@ export const UpdateNameForm = () => {
           label="Update Name"
           loadingLabel="Updating..."
           isLoading={isLoading}
-          disabled={isLoading}
+          disabled={isLoading || !form.formState.isValid || !form.formState.isDirty}
         />
       </FieldGroup>
     </form>
