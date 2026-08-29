@@ -15,11 +15,16 @@ import { betterAuthSecret } from './env';
 import { prisma } from './prisma';
 import { sendMail } from './send-email';
 
+const normalizedBaseUrl = baseUrl?.replace(/\/+$/, '');
+const vercelPreviewUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL.replace(/\/+$/, '')}`
+  : undefined;
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql', // or "mysql", "postgresql", ...etc
   }),
-  baseURL: baseUrl,
+  baseURL: normalizedBaseUrl,
   secret: betterAuthSecret,
   emailAndPassword: {
     enabled: true,
@@ -68,5 +73,7 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
-  trustedOrigins: Array.from(new Set([baseUrl].filter(Boolean) as string[])),
+  trustedOrigins: Array.from(
+    new Set([normalizedBaseUrl, vercelPreviewUrl].filter(Boolean) as string[]),
+  ),
 });
