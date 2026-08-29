@@ -1,6 +1,7 @@
 ---
 description: Builds UI with Next.js App Router, Tailwind v4, shadcn/ui and TanStack Query. Use for components, pages, forms, theming.
 mode: subagent
+model: google/antigravity-gemini-3-flash
 color: "#F59E0B"
 permission:
   edit: allow

@@ -1,6 +1,7 @@
 ---
 description: Verifies quality via lint, build, and manual QA checklists. Use after any code change or before PR/merge.
 mode: subagent
+model: opencode/ling-3.0-flash-fin-free
 color: "#EF4444"
 permission:
   edit: deny

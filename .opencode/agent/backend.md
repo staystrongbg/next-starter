@@ -1,6 +1,7 @@
 ---
 description: Implements Prisma, Better Auth, API routes, validations and server logic. Use for DB, auth, email, or server-side work.
 mode: subagent
+model: opencode/muse-spark-1.2-contributor-free
 color: "#10B981"
 permission:
   edit: allow

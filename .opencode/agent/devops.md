@@ -1,6 +1,7 @@
 ---
 description: Handles build, env, DB, and deployment. Use for Next build, env vars, Neon/Prisma, and deployment issues.
 mode: subagent
+model: opencode/nemotron-3.5-lightning-free
 color: "#8B5CF6"
 permission:
   edit: allow

@@ -1,6 +1,7 @@
 ---
 description: Breaks down features into tasks, designs DB schema and API contracts. Use for planning, scoping, or architecture decisions before coding.
 mode: subagent
+model: opencode/mimo-v2.5-free
 color: "#3B82F6"
 permission:
   edit: deny
