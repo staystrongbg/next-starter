@@ -136,7 +136,9 @@ export const SignUpForm = () => {
           label="Sign Up"
           loadingLabel="Signing up..."
           isLoading={isLoading}
-          disabled={isLoading || !form.formState.isValid || strength.score < MIN_PASSWORD_STRENGTH_SCORE}
+          disabled={
+            isLoading || !form.formState.isValid || strength.score < MIN_PASSWORD_STRENGTH_SCORE
+          }
         />
       </FieldGroup>
     </form>

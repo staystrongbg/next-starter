@@ -19,7 +19,13 @@
  */
 
 export const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
-export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
+export const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'image/avif',
+];
 
 export function validateImageFile(file: File): string | null {
   if (!file.type.startsWith('image/')) {

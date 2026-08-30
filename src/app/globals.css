@@ -122,7 +122,7 @@
   }
   /* A11y: ensure visible focus rings for keyboard navigation */
   *:focus-visible {
-    @apply ring-ring ring-2 ring-offset-2 ring-offset-background outline-none;
+    @apply ring-ring ring-offset-background ring-2 ring-offset-2 outline-none;
   }
   /* Ensure FieldError is announced and visible in both themes */
   [data-slot='field-error'] {

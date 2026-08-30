@@ -38,7 +38,11 @@ export default function UpdatePasswordForm() {
     },
   });
 
-  const newPasswordValue = useWatch({ control: form.control, name: 'newPassword', defaultValue: '' });
+  const newPasswordValue = useWatch({
+    control: form.control,
+    name: 'newPassword',
+    defaultValue: '',
+  });
 
   const strength = useMemo(() => getPasswordStrength(newPasswordValue), [newPasswordValue]);
 

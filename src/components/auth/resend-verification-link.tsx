@@ -16,8 +16,7 @@ export default function ResendVerificationLink() {
   const errorMessage =
     error instanceof Error ? error.message : typeof error === 'string' ? error : undefined;
 
-  const isExpired =
-    !!errorMessage && /expired|invalid.*token|token.*invalid/i.test(errorMessage);
+  const isExpired = !!errorMessage && /expired|invalid.*token|token.*invalid/i.test(errorMessage);
 
   if (isSessionPending) {
     return (
@@ -35,7 +34,9 @@ export default function ResendVerificationLink() {
         <div className="flex flex-col items-center gap-2 text-center">
           <CheckCircle className="mx-auto h-10 w-10 text-green-500" aria-hidden="true" />
           <p className="text-sm font-medium text-green-700 dark:text-green-400">Email verified</p>
-          <p className="text-muted-foreground text-sm">Your email has been successfully verified.</p>
+          <p className="text-muted-foreground text-sm">
+            Your email has been successfully verified.
+          </p>
         </div>
       ) : (
         <p className="text-muted-foreground text-center text-sm">
@@ -56,10 +57,7 @@ export default function ResendVerificationLink() {
           className="flex items-center gap-2"
         />
       ) : errorMessage ? (
-        <FieldError
-          errors={[{ message: errorMessage }]}
-          className="flex items-center gap-2"
-        />
+        <FieldError errors={[{ message: errorMessage }]} className="flex items-center gap-2" />
       ) : null}
 
       {/* Loading / Expired hint with icon */}

@@ -1,5 +1,4 @@
 import 'server-only';
-
 import { z } from 'zod';
 
 /**
@@ -10,9 +9,7 @@ import { z } from 'zod';
 const envSchema = z
   .object({
     DATABASE_URL: z.url('DATABASE_URL must be a valid URL (postgresql://...)'),
-    BETTER_AUTH_SECRET: z
-      .string()
-      .min(32, 'BETTER_AUTH_SECRET must be at least 32 characters'),
+    BETTER_AUTH_SECRET: z.string().min(32, 'BETTER_AUTH_SECRET must be at least 32 characters'),
     BETTER_AUTH_URL: z
       .url('BETTER_AUTH_URL must be a valid URL')
       .transform(v => v.replace(/\/+$/, '')),
@@ -45,10 +42,7 @@ const envSchema = z
       .string()
       .optional()
       .transform(v => (v === '' ? undefined : v)),
-    NODE_ENV: z
-      .enum(['development', 'production', 'test'])
-      .optional()
-      .default('development'),
+    NODE_ENV: z.enum(['development', 'production', 'test']).optional().default('development'),
   })
   .superRefine((val, ctx) => {
     // Require at least one Nodemailer credential: EMAIL_FROM covers From,
@@ -57,8 +51,7 @@ const envSchema = z
     if (!val.NODEMAILER_PASSWORD && !val.NODEMAILER_EMAIL) {
       ctx.addIssue({
         code: 'custom',
-        message:
-          'Either NODEMAILER_PASSWORD or NODEMAILER_EMAIL must be set for email delivery',
+        message: 'Either NODEMAILER_PASSWORD or NODEMAILER_EMAIL must be set for email delivery',
         path: ['NODEMAILER_PASSWORD'],
       });
     }
