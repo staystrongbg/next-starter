@@ -68,5 +68,5 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
-  trustedOrigins: baseUrl ? [baseUrl] : [],
+  trustedOrigins: [baseUrl],
 });
