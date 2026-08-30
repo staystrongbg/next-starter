@@ -36,7 +36,7 @@ export const useSignUp = () => {
       }
     },
     onSuccess: () => {
-      router.push('/sign-in');
+      router.push('/profile');
       form.reset();
     },
     onError: err => {
