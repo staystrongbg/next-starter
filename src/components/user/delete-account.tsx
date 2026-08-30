@@ -50,7 +50,10 @@ export function DeleteAccount() {
               isLoading={isLoading}
               label="Delete Account"
               loadingLabel="Deleting..."
-              onClick={() => deleteUser()}
+              onClick={() => {
+                setOpen(false);
+                deleteUser();
+              }}
               variant="destructive"
               disabled={isLoading}
             />
