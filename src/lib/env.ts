@@ -43,6 +43,8 @@ const envSchema = z
       .optional()
       .transform(v => (v === '' ? undefined : v)),
     NODE_ENV: z.enum(['development', 'production', 'test']).optional().default('development'),
+    PRODUCTION_URL: z.url().optional(),
+    DEVELOPMENT_URL: z.url().optional().default('http://localhost:3000'),
   })
   .superRefine((val, ctx) => {
     // Require at least one Nodemailer credential: EMAIL_FROM covers From,
@@ -86,3 +88,5 @@ export const githubClientSecret = env.GITHUB_CLIENT_SECRET ?? '';
 export const googleClientId = env.GOOGLE_CLIENT_ID ?? '';
 export const googleClientSecret = env.GOOGLE_CLIENT_SECRET ?? '';
 export const environment = env.NODE_ENV;
+export const productionUrl = env.PRODUCTION_URL;
+export const developmentUrl = env.DEVELOPMENT_URL;

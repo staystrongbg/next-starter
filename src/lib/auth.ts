@@ -1,7 +1,6 @@
-import 'server-only';
-
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
+import 'server-only';
 
 import {
   baseUrl,
@@ -11,34 +10,15 @@ import {
   googleClientId,
   googleClientSecret,
 } from './constants';
-import { betterAuthSecret } from './env';
+import { betterAuthSecret, environment, productionUrl } from './env';
 import { prisma } from './prisma';
 import { sendMail } from './send-email';
 
-// Effective baseURL: prefer explicit BETTER_AUTH_URL, but fallback to Vercel production URL in prod
-// This fixes verify-email links going to localhost when BETTER_AUTH_URL is still localhost on Vercel.
-const vercelProdUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL.replace(/\/+$/, '')}`
-  : undefined;
-const vercelUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL.replace(/\/+$/, '')}`
-  : undefined;
-const isLocalBaseUrl = baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1');
-const effectiveBaseUrl =
-  isLocalBaseUrl && process.env.VERCEL === '1' ? vercelProdUrl || vercelUrl || baseUrl : baseUrl;
+const isLocalEnv = environment === 'development';
 
-const trustedOrigins = Array.from(
-  new Set(
-    [
-      effectiveBaseUrl,
-      baseUrl,
-      'https://next-starter-bice.vercel.app',
-      'https://*.vercel.app',
-      vercelUrl,
-      vercelProdUrl,
-    ].filter(Boolean) as string[],
-  ),
-);
+const trustedOrigins = [baseUrl, productionUrl].filter(Boolean) as string[];
+
+const effectiveBaseUrl = isLocalEnv ? baseUrl : productionUrl;
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
