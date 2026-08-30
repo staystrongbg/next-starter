@@ -15,6 +15,20 @@ import { betterAuthSecret } from './env';
 import { prisma } from './prisma';
 import { sendMail } from './send-email';
 
+const trustedOrigins = Array.from(
+  new Set(
+    [
+      baseUrl,
+      'https://next-starter-bice.vercel.app',
+      'https://*.vercel.app',
+      process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+      process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : undefined,
+    ].filter(Boolean) as string[],
+  ),
+);
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql', // or "mysql", "postgresql", ...etc
@@ -68,5 +82,5 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
-  trustedOrigins: [baseUrl],
+  trustedOrigins,
 });
