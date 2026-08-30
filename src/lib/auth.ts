@@ -15,13 +15,11 @@ import { betterAuthSecret } from './env';
 import { prisma } from './prisma';
 import { sendMail } from './send-email';
 
-const normalizedBaseUrl = baseUrl?.replace(/\/+$/, '');
-
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql', // or "mysql", "postgresql", ...etc
   }),
-  baseURL: normalizedBaseUrl,
+  baseURL: baseUrl,
   secret: betterAuthSecret,
   emailAndPassword: {
     enabled: true,
@@ -70,5 +68,5 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
-  trustedOrigins: normalizedBaseUrl ? [normalizedBaseUrl] : [],
+  trustedOrigins: baseUrl ? [baseUrl] : [],
 });
