@@ -1,6 +1,7 @@
+import 'server-only';
+
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import 'server-only';
 
 import {
   baseUrl,
@@ -15,32 +16,6 @@ import { prisma } from './prisma';
 import { sendMail } from './send-email';
 
 const normalizedBaseUrl = baseUrl?.replace(/\/+$/, '');
-const vercelPreviewUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL.replace(/\/+$/, '')}`
-  : undefined;
-const vercelProdUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL.replace(/\/+$/, '')}`
-  : undefined;
-
-const trustedOrigins = Array.from(
-  new Set(
-    [
-      normalizedBaseUrl,
-      vercelPreviewUrl,
-      vercelProdUrl,
-      'https://next-starter-bice.vercel.app',
-      'https://*.vercel.app',
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
-    ].filter(Boolean) as string[],
-  ),
-);
-
-// Diagnostic logging for Vercel env mismatch (BETTER_AUTH_URL still localhost). Remove after verified.
-console.log('[auth] baseURL:', normalizedBaseUrl);
-console.log('[auth] trustedOrigins:', trustedOrigins);
-console.log('[auth] VERCEL_URL:', process.env.VERCEL_URL);
-console.log('[auth] VERCEL_PROJECT_PRODUCTION_URL:', process.env.VERCEL_PROJECT_PRODUCTION_URL);
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -95,5 +70,5 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
-  trustedOrigins,
+  trustedOrigins: normalizedBaseUrl ? [normalizedBaseUrl] : [],
 });
