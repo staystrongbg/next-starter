@@ -2,7 +2,7 @@
 
 import nodemailer from 'nodemailer';
 
-import { gmailServicePassword, nodemailerEmail } from './constants';
+import { gmailServicePassword, nodemailerEmail } from './env';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',

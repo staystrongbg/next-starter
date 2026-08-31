@@ -4,13 +4,15 @@ import 'server-only';
 
 import {
   baseUrl,
+  betterAuthSecret,
   emailFrom,
+  environment,
   githubClientId,
   githubClientSecret,
   googleClientId,
   googleClientSecret,
-} from './constants';
-import { betterAuthSecret, environment, productionUrl } from './env';
+  productionUrl,
+} from './env';
 import { prisma } from './prisma';
 import { sendMail } from './send-email';
 

@@ -75,7 +75,6 @@ try {
 
 export const env: Env = parsed;
 
-// Convenience re-exports with friendlier names for consumers that expect them
 export const databaseUrl = env.DATABASE_URL;
 export const betterAuthSecret = env.BETTER_AUTH_SECRET;
 export const baseUrl = env.BETTER_AUTH_URL;
