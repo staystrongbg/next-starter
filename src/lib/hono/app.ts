@@ -4,9 +4,9 @@ import { logger } from 'hono/logger';
 import { echoRoute } from './routes/echo';
 import { healthRoute } from './routes/health';
 
-// Basic Hono server — second layer for API requests
 // All app data access goes through here (mounted at /api/hono/*)
 // Chain .route() so AppType retains full type inference for hc<AppType>
+// protect api routes with requireAuth middleware
 export const app = new Hono()
   .basePath('/api/hono')
   .use(logger())

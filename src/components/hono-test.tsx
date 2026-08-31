@@ -2,6 +2,7 @@
 
 import { honoClient } from '@/lib/hono/client';
 import { useQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 
 export function EchoGet() {
   const { data, error, isPending } = useQuery({
@@ -15,11 +16,16 @@ export function EchoGet() {
     },
   });
 
-  if (isPending) return <div>Loading…</div>;
+  if (isPending)
+    return (
+      <div>
+        <Loader2 className="animate-spin" />
+      </div>
+    );
   if (error) return <div>Error: {(error as Error).message}</div>;
 
   return (
-    <div className="text-center text-2xl font-bold text-blue-400">
+    <div className="text-center text-2xl font-bold text-green-500">
       {data.echo} @ {data.at}
     </div>
   );
